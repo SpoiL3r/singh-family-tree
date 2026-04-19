@@ -1,0 +1,8 @@
+{
+  "name": "Sheo Deen Vansh — Family Tree Builder",
+  "id": "sheo-deen-vansh-family-tree",
+  "api": "1.0.0",
+  "main": "code.js",
+  "editorType": ["figma"],
+  "documentAccess": "dynamic-page"
+}

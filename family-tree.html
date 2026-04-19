@@ -1,0 +1,2764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Sheo Deen Vansh &mdash; Family Tree</title>
+  <style>
+    :root {
+      --chrome-h: 78px;
+      --bg: #efe5d2;
+      --bg-deep: #d9c8ae;
+      --ink: #21150f;
+      --ink-soft: #5f4739;
+      --ink-muted: #866a57;
+      --line: rgba(79, 53, 37, 0.16);
+      --panel: rgba(255, 249, 240, 0.78);
+      --panel-strong: rgba(255, 252, 247, 0.94);
+      --shadow: 0 18px 40px rgba(66, 38, 19, 0.13);
+      --shadow-soft: 0 10px 24px rgba(66, 38, 19, 0.1);
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --radius-sm: 12px;
+      --sans: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      --serif: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      min-height: 100dvh;
+    }
+
+    body {
+      font-family: var(--sans);
+      color: var(--ink);
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 18% 16%, rgba(255, 234, 191, 0.26), transparent 28%),
+        radial-gradient(circle at 78% 12%, rgba(170, 127, 84, 0.08), transparent 24%),
+        linear-gradient(180deg, #f8f2e8 0%, #f3eadc 46%, #efe3d1 100%);
+      overscroll-behavior: none;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at center, rgba(255, 255, 255, 0.28), transparent 62%);
+      z-index: 0;
+      opacity: 0.65;
+    }
+
+    button {
+      font: inherit;
+      color: inherit;
+      background: none;
+      border: 0;
+    }
+
+    .page-shell {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      isolation: isolate;
+    }
+
+    #topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 12px 18px;
+      background: linear-gradient(180deg, rgba(78, 57, 43, 0.92), rgba(78, 57, 43, 0.82));
+      border-bottom: 1px solid rgba(255, 245, 229, 0.14);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 8px 22px rgba(24, 14, 10, 0.12);
+    }
+
+    .brand-block {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 0;
+      position: relative;
+      z-index: 2;
+    }
+
+    .eyebrow {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(247, 229, 207, 0.76);
+    }
+
+    .brand-row {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 2px;
+    }
+
+    .brand-row h1 {
+      font-family: var(--serif);
+      font-size: 30px;
+      line-height: 0.96;
+      color: #fff6ea;
+      letter-spacing: 0.02em;
+      font-weight: 700;
+      text-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);
+    }
+
+    .brand-subtitle {
+      font-size: 13px;
+      line-height: 1.3;
+      color: rgba(246, 233, 219, 0.9);
+      max-width: 620px;
+    }
+
+    .brand-location {
+      font-size: 10px;
+      line-height: 1.3;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(247, 229, 207, 0.58);
+    }
+
+    .header-centerpiece {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 7px;
+      min-width: 360px;
+      pointer-events: none;
+    }
+
+    .header-kicker {
+      padding: 8px 16px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, rgba(255, 245, 232, 0.16), rgba(255, 245, 232, 0.08));
+      border: 1px solid rgba(255, 240, 223, 0.18);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      color: rgba(255, 240, 224, 0.86);
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .header-credit {
+      position: relative;
+      padding-top: 6px;
+      font-family: var(--serif);
+      font-size: 13px;
+      line-height: 1.1;
+      letter-spacing: 0.03em;
+      color: rgba(255, 236, 216, 0.78);
+      text-align: center;
+      white-space: nowrap;
+      text-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);
+    }
+
+    .header-credit::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 88px;
+      height: 1px;
+      transform: translateX(-50%);
+      background: linear-gradient(90deg, transparent, rgba(255, 233, 210, 0.52), transparent);
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      position: relative;
+      z-index: 2;
+    }
+
+    .stat-strip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .stat-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(255, 248, 239, 0.11);
+      border: 1px solid rgba(255, 245, 229, 0.16);
+      color: #fff4e7;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      backdrop-filter: blur(10px);
+    }
+
+    .stat-chip strong {
+      color: #ffe2af;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .control-strip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .mobile-dock {
+      display: none;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 38px;
+      height: 34px;
+      padding: 0 12px;
+      border-radius: 999px;
+      background: rgba(255, 250, 244, 0.94);
+      border: 1px solid rgba(116, 84, 62, 0.18);
+      color: #3e2617;
+      cursor: pointer;
+      box-shadow: 0 6px 16px rgba(66, 38, 19, 0.08);
+      transition: transform 140ms ease, background-color 140ms ease, box-shadow 140ms ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      background: #fffdf9;
+      box-shadow: 0 10px 18px rgba(66, 38, 19, 0.12);
+    }
+
+    .btn:focus-visible {
+      outline: 2px solid #f0b86f;
+      outline-offset: 2px;
+    }
+
+    .btn.secondary {
+      background: rgba(255, 247, 237, 0.14);
+      color: #fff2e3;
+      border-color: rgba(255, 247, 237, 0.18);
+      box-shadow: none;
+    }
+
+    .btn.secondary:hover {
+      background: rgba(255, 247, 237, 0.2);
+      box-shadow: none;
+    }
+
+    .zoom-readout {
+      min-width: 54px;
+      justify-content: center;
+      font-weight: 700;
+    }
+
+    #desktop-panel-bar {
+      position: fixed;
+      left: 16px;
+      bottom: 16px;
+      z-index: 16;
+      display: flex;
+      gap: 8px;
+    }
+
+    #desktop-panel-bar .btn {
+      height: 36px;
+      padding: 0 14px;
+      background: rgba(255, 252, 247, 0.92);
+    }
+
+    .page-credit {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 14;
+      display: flex;
+      align-items: baseline;
+      gap: 7px;
+      padding: 0;
+      color: rgba(88, 62, 45, 0.78);
+      font-size: 10px;
+      line-height: 1.1;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      pointer-events: none;
+    }
+
+    .page-credit::before {
+      content: "";
+      width: 26px;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(117, 84, 61, 0), rgba(117, 84, 61, 0.38));
+      transform: translateY(-1px);
+    }
+
+    .page-credit-label {
+      opacity: 0.62;
+    }
+
+    .page-credit-name {
+      font-family: var(--serif);
+      font-size: 14px;
+      letter-spacing: 0.03em;
+      text-transform: none;
+      color: rgba(66, 41, 28, 0.86);
+    }
+
+    #startup-error {
+      position: fixed;
+      left: 14px;
+      right: 14px;
+      top: calc(var(--chrome-h) + 14px);
+      z-index: 40;
+      display: none;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: rgba(92, 35, 18, 0.94);
+      border: 1px solid rgba(255, 220, 195, 0.22);
+      color: #fff1e5;
+      box-shadow: 0 16px 32px rgba(38, 14, 8, 0.22);
+    }
+
+    #startup-error.open {
+      display: block;
+    }
+
+    #startup-error strong {
+      display: block;
+      font-family: var(--serif);
+      font-size: 18px;
+      line-height: 1.1;
+      margin-bottom: 6px;
+    }
+
+    #startup-error span {
+      display: block;
+      font-size: 12px;
+      line-height: 1.5;
+      color: rgba(255, 237, 222, 0.88);
+    }
+
+    .relation-panel {
+      top: calc(var(--chrome-h) + 18px);
+      right: 18px;
+      width: min(340px, calc(100vw - 36px));
+    }
+
+    .relation-form {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .relation-field {
+      display: grid;
+      gap: 6px;
+    }
+
+    .relation-field label {
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      font-weight: 700;
+    }
+
+    .relation-input {
+      width: 100%;
+      height: 40px;
+      padding: 0 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(108, 78, 59, 0.16);
+      background: rgba(255, 252, 247, 0.86);
+      color: var(--ink);
+      font: inherit;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.54);
+    }
+
+    .relation-input:focus {
+      outline: 2px solid rgba(229, 176, 107, 0.42);
+      outline-offset: 1px;
+      border-color: rgba(182, 128, 72, 0.34);
+    }
+
+    .relation-hint {
+      font-size: 11px;
+      line-height: 1.45;
+      color: var(--ink-muted);
+    }
+
+    .relation-result {
+      min-height: 108px;
+      padding: 14px 14px 13px;
+      border-radius: 16px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0.28)),
+        rgba(255, 252, 247, 0.9);
+      border: 1px solid rgba(117, 84, 61, 0.12);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.58),
+        0 10px 20px rgba(72, 40, 22, 0.06);
+      display: grid;
+      gap: 6px;
+    }
+
+    .relation-kicker {
+      font-size: 10px;
+      line-height: 1.2;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #a17e63;
+      font-weight: 700;
+    }
+
+    .relation-term {
+      font-family: var(--serif);
+      font-size: 32px;
+      line-height: 0.96;
+      color: #2f1c12;
+      letter-spacing: 0.01em;
+    }
+
+    .relation-explain {
+      font-size: 13px;
+      line-height: 1.55;
+      color: var(--ink-soft);
+    }
+
+    .relation-examples {
+      font-size: 11px;
+      line-height: 1.45;
+      color: var(--ink-muted);
+      padding-top: 7px;
+      border-top: 1px solid rgba(117, 84, 61, 0.08);
+    }
+
+    .relation-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .relation-actions .btn {
+      height: 38px;
+      padding: 0 14px;
+    }
+
+    .relation-actions .btn-clear {
+      background: rgba(255, 248, 241, 0.72);
+      color: #6a4a35;
+      border-color: rgba(117, 84, 61, 0.14);
+      box-shadow: none;
+    }
+
+    .panel-section {
+      margin-top: 14px;
+    }
+
+    .panel-section-title {
+      font-family: var(--serif);
+      font-size: 17px;
+      line-height: 1.15;
+      color: #2b1b12;
+      margin-top: 4px;
+    }
+
+    .panel-section-copy {
+      margin-top: 6px;
+      font-size: 12px;
+      line-height: 1.5;
+      color: var(--ink-soft);
+    }
+
+    .panel {
+      position: fixed;
+      z-index: 15;
+      border: 1px solid rgba(117, 84, 61, 0.14);
+      border-radius: var(--radius-lg);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0)),
+        var(--panel);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+      overflow: hidden;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(10px);
+      transition: opacity 160ms ease, transform 160ms ease;
+    }
+
+    .panel.open {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 5px;
+      background: linear-gradient(90deg, rgba(125, 84, 47, 0.7), rgba(235, 176, 105, 0.85));
+    }
+
+    .panel::after {
+      content: "";
+      position: absolute;
+      inset: 12px;
+      border-radius: calc(var(--radius-lg) - 8px);
+      border: 1px solid rgba(255, 255, 255, 0.32);
+      pointer-events: none;
+      opacity: 0.72;
+    }
+
+    .panel-inner {
+      position: relative;
+      padding: 18px 18px 16px;
+    }
+
+    .panel h2 {
+      font-family: var(--serif);
+      font-size: 20px;
+      line-height: 1.1;
+      margin-top: 2px;
+      margin-bottom: 8px;
+      color: #2b1b12;
+    }
+
+    .panel .eyebrow {
+      color: rgba(140, 103, 75, 0.82);
+    }
+
+    .panel p {
+      color: var(--ink-soft);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    #overview-panel {
+      top: calc(var(--chrome-h) + 18px);
+      left: 18px;
+      width: min(280px, calc(100vw - 36px));
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .summary-card {
+      border-radius: var(--radius-sm);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.52), rgba(255, 255, 255, 0)),
+        rgba(255, 253, 249, 0.82);
+      border: 1px solid rgba(117, 84, 61, 0.1);
+      padding: 10px 10px 9px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45);
+    }
+
+    .summary-card strong {
+      display: block;
+      font-family: var(--serif);
+      font-size: 20px;
+      line-height: 1;
+      color: #2e190f;
+      margin-bottom: 4px;
+    }
+
+    .summary-card span {
+      display: block;
+      font-size: 10px;
+      color: var(--ink-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .tip-list {
+      display: grid;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .tip-item {
+      display: grid;
+      grid-template-columns: 70px 1fr;
+      gap: 8px;
+      font-size: 11px;
+      line-height: 1.4;
+    }
+
+    .tip-item strong {
+      color: #3a2316;
+    }
+
+    .tip-item span code {
+      font-size: 10px;
+      padding: 1px 5px;
+      border-radius: 999px;
+      background: rgba(81, 53, 37, 0.08);
+      color: #553626;
+    }
+
+    #legend-panel {
+      right: 18px;
+      bottom: 60px;
+      width: min(240px, calc(100vw - 36px));
+    }
+
+    .legend-group {
+      display: grid;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .legend-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 12px;
+      color: #3f2a1d;
+    }
+
+    .legend-row-left {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      flex: 0 0 auto;
+      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+    }
+
+    .legend-tag {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 32px;
+      padding: 3px 7px;
+      border-radius: 999px;
+      background: rgba(81, 53, 37, 0.08);
+      color: var(--ink-muted);
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .legend-divider {
+      height: 1px;
+      background: rgba(98, 69, 50, 0.12);
+      margin: 12px 0 10px;
+    }
+
+    .symbol-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .symbol-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 11px;
+      color: #4d3528;
+    }
+
+    .symbol-preview {
+      width: 34px;
+      height: 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(107, 77, 56, 0.18);
+      background: rgba(255, 251, 245, 0.82);
+      flex: 0 0 auto;
+    }
+
+    .symbol-preview.dashed {
+      border-style: dashed;
+    }
+
+    .symbol-preview.dimmed {
+      opacity: 0.62;
+    }
+
+    #mobile-info-toggle,
+    #mobile-panel {
+      display: none;
+    }
+
+    #canvas-container {
+      position: fixed;
+      top: var(--chrome-h);
+      left: 0;
+      right: 0;
+      bottom: 0;
+      overflow: hidden;
+      cursor: grab;
+      user-select: none;
+      touch-action: none;
+      z-index: 1;
+      background:
+        radial-gradient(circle at 18% 16%, rgba(255, 232, 196, 0.18), transparent 24%),
+        linear-gradient(180deg, rgba(255, 252, 247, 0.34), rgba(255, 252, 247, 0));
+    }
+
+    #canvas-container.dragging {
+      cursor: grabbing;
+    }
+
+    #canvas-container::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(180deg, rgba(255, 250, 243, 0.52), transparent 16%, transparent 88%, rgba(124, 84, 53, 0.04) 100%);
+      z-index: 0;
+    }
+
+    #tree-wrapper {
+      position: absolute;
+      transform-origin: 0 0;
+      z-index: 1;
+    }
+
+    #lines {
+      position: absolute;
+      top: 0;
+      left: 0;
+      overflow: visible;
+      pointer-events: none;
+    }
+
+    .tree-line {
+      transition: opacity 180ms ease, stroke-width 180ms ease, filter 180ms ease;
+    }
+
+    .generation-marker {
+      position: absolute;
+      left: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: rgba(255, 252, 247, 0.84);
+      border: 1px solid rgba(116, 84, 61, 0.11);
+      color: var(--ink-muted);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      box-shadow: 0 8px 16px rgba(81, 56, 38, 0.08);
+      white-space: nowrap;
+    }
+
+    .generation-marker::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(206, 150, 88, 0.85);
+      box-shadow: 0 0 0 4px rgba(255, 213, 155, 0.28);
+    }
+
+    .card {
+      position: absolute;
+      width: 184px;
+      height: 112px;
+      padding: 12px 12px 12px;
+      border-radius: 18px;
+      border: 1px solid var(--stroke);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0)),
+        var(--surface);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.62),
+        0 14px 28px rgba(73, 43, 25, 0.12);
+      color: #1f140d;
+      cursor: default;
+      transition:
+        transform 160ms ease,
+        box-shadow 160ms ease,
+        border-color 160ms ease,
+        opacity 180ms ease,
+        filter 180ms ease;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 6px;
+      background: linear-gradient(90deg, var(--accent), rgba(255, 255, 255, 0.6));
+    }
+
+    .card-inner {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      height: 100%;
+    }
+
+    .card:hover {
+      transform: translateY(-4px) scale(1.03);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.72),
+        0 18px 34px rgba(73, 43, 25, 0.18);
+      z-index: 4;
+    }
+
+    #tree-wrapper.tree-has-highlight .card,
+    #tree-wrapper.tree-has-highlight .tree-line {
+      opacity: 0.16;
+    }
+
+    #tree-wrapper.tree-has-highlight .card.is-highlighted-card {
+      opacity: 1;
+      filter: saturate(1.06);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.78),
+        0 20px 36px rgba(73, 43, 25, 0.18);
+      z-index: 5;
+    }
+
+    #tree-wrapper.tree-has-highlight .tree-line.is-highlighted-line {
+      opacity: 1;
+      stroke-width: 3.4px !important;
+      filter: drop-shadow(0 0 5px rgba(255, 213, 145, 0.85));
+    }
+
+    .card-root {
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.72),
+        0 18px 34px rgba(73, 43, 25, 0.18);
+    }
+
+    .card-name {
+      position: relative;
+      z-index: 1;
+      font-family: var(--serif);
+      font-size: 16px;
+      line-height: 1.1;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      color: #25160f;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+      padding-right: 6px;
+      min-height: 36px;
+    }
+
+    .card-root .card-name {
+      font-size: 18px;
+    }
+
+    .card-unknown {
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.48), rgba(255, 255, 255, 0)),
+        repeating-linear-gradient(
+          -45deg,
+          rgba(255, 255, 255, 0.18),
+          rgba(255, 255, 255, 0.18) 7px,
+          rgba(130, 101, 78, 0.06) 7px,
+          rgba(130, 101, 78, 0.06) 14px
+        ),
+        var(--surface);
+    }
+
+    .card-unknown .card-name {
+      font-size: 14px;
+      font-style: italic;
+      color: #6a5140;
+    }
+
+    .card-unknown .meta-pill {
+      background: rgba(255, 248, 238, 0.7);
+    }
+
+    .card-sub {
+      display: none;
+    }
+
+    .card-footer {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+      min-height: 42px;
+      margin-top: auto;
+    }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-wrap: nowrap;
+      min-width: 0;
+    }
+
+    .meta-pill,
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      min-height: 18px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(255, 251, 245, 0.74);
+      border: 1px solid rgba(84, 57, 41, 0.12);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.52);
+      white-space: nowrap;
+    }
+
+    .meta-pill {
+      font-size: 9px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(62, 40, 28, 0.72);
+      font-weight: 700;
+    }
+
+    .card-badges {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      gap: 5px;
+      min-height: 20px;
+      max-width: 100%;
+    }
+
+    .badge {
+      font-size: 9px;
+      color: #624330;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      font-weight: 700;
+      background: rgba(245, 236, 226, 0.96);
+    }
+
+    .badge-deceased {
+      background: rgba(229, 220, 210, 0.96);
+      color: #5a4940;
+    }
+
+    .badge-married {
+      background: rgba(247, 238, 228, 0.96);
+      color: #7a5842;
+    }
+
+    .badge-issueless {
+      background: rgba(238, 233, 225, 0.96);
+      color: #6f5b4f;
+    }
+
+    .badge-unknown {
+      background: rgba(243, 237, 231, 0.96);
+      color: #775d4c;
+    }
+
+    .married-out {
+      border-style: dashed;
+      opacity: 0.82;
+    }
+
+    .deceased {
+      filter: saturate(0.8);
+      opacity: 0.84;
+    }
+
+    @media (max-width: 1180px) {
+      #overview-panel {
+        width: 272px;
+      }
+
+      #legend-panel {
+        width: 228px;
+      }
+    }
+
+    @media (max-width: 860px) {
+      :root {
+        --chrome-h: 86px;
+      }
+
+      #topbar {
+        padding: 14px 14px 12px;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .brand-row h1 {
+        font-size: 24px;
+      }
+
+      .brand-subtitle {
+        font-size: 12px;
+      }
+
+      .brand-location {
+        font-size: 10px;
+      }
+
+      .toolbar {
+        width: 100%;
+        justify-content: flex-end;
+      }
+
+      .header-centerpiece {
+        display: none;
+      }
+
+      .page-credit {
+        right: 12px;
+        bottom: calc(84px + env(safe-area-inset-bottom));
+        gap: 6px;
+        font-size: 9px;
+      }
+
+      .page-credit::before {
+        width: 20px;
+      }
+
+      .page-credit-name {
+        font-size: 12px;
+      }
+
+      .stat-strip {
+        display: none;
+      }
+
+      .control-strip {
+        display: none;
+      }
+
+      .btn {
+        height: 40px;
+        min-width: 40px;
+        padding: 0 12px;
+      }
+
+      #overview-panel,
+      #legend-panel,
+      #relation-panel,
+      #desktop-panel-bar {
+        display: none;
+      }
+
+      #mobile-info-toggle {
+        display: none;
+      }
+
+      .mobile-dock {
+        position: fixed;
+        left: 12px;
+        right: 12px;
+        bottom: calc(14px + env(safe-area-inset-bottom));
+        z-index: 18;
+        display: grid;
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        gap: 8px;
+        padding: 10px;
+        border-radius: 24px;
+        background: rgba(61, 39, 26, 0.82);
+        border: 1px solid rgba(255, 240, 222, 0.14);
+        box-shadow: 0 16px 32px rgba(22, 12, 8, 0.24);
+        backdrop-filter: blur(18px);
+      }
+
+      .mobile-dock .btn {
+        min-width: 0;
+        width: 100%;
+        height: 42px;
+        padding: 0;
+        box-shadow: none;
+      }
+
+      .mobile-dock .btn.secondary {
+        background: rgba(255, 247, 237, 0.18);
+      }
+
+      #mobile-panel {
+        position: fixed;
+        left: 12px;
+        right: 12px;
+        bottom: calc(78px + env(safe-area-inset-bottom));
+        z-index: 17;
+        display: block;
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(12px);
+        transition: opacity 140ms ease, transform 140ms ease;
+      }
+
+      #mobile-panel.open {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0);
+      }
+
+      #mobile-panel .panel-inner {
+        max-height: min(68vh, 520px);
+        overflow: auto;
+        padding-right: 16px;
+      }
+
+      .summary-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 560px) {
+      :root {
+        --chrome-h: 74px;
+      }
+
+      #topbar {
+        padding: 10px 12px;
+      }
+
+      .eyebrow {
+        font-size: 10px;
+      }
+
+      .brand-row h1 {
+        font-size: 21px;
+      }
+
+      .brand-block {
+        gap: 2px;
+      }
+
+      .control-strip {
+        gap: 6px;
+      }
+
+      .btn {
+        padding: 0 10px;
+        font-size: 13px;
+      }
+
+      .summary-grid {
+        gap: 8px;
+      }
+
+      .summary-card {
+        padding: 10px;
+      }
+
+      .summary-card strong {
+        font-size: 20px;
+      }
+
+      .tip-item {
+        grid-template-columns: 64px 1fr;
+      }
+
+      .mobile-dock {
+        gap: 6px;
+        padding: 8px;
+      }
+
+      .mobile-dock .btn {
+        height: 40px;
+        font-size: 12px;
+      }
+
+      #mobile-panel .panel-inner {
+        padding: 18px 18px 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <header id="topbar">
+      <div class="brand-block">
+        <div class="eyebrow">Static Family Archive</div>
+        <div class="brand-row">
+          <h1>Sheo Deen Vansh</h1>
+          <div class="brand-subtitle">Family Tree of Sheo Deen Vansh</div>
+          <div class="brand-location">Babuganj, Lucknow</div>
+        </div>
+      </div>
+      <div class="header-centerpiece">
+        <div class="header-kicker">Seven Generations of the Sheo Deen Vansh Lineage</div>
+        <div class="header-credit">Compiled by late Shri Tara Chandra Singh</div>
+      </div>
+      <div class="toolbar">
+        <div class="stat-strip">
+          <div class="stat-chip"><strong id="member-count-chip">0</strong><span>Members</span></div>
+          <div class="stat-chip"><strong id="generation-count-chip">0</strong><span>Generations</span></div>
+          <div class="stat-chip"><strong id="branch-count-chip">0</strong><span>Branches</span></div>
+        </div>
+        <div class="control-strip">
+          <button class="btn secondary zoom-readout" id="zoom-readout" type="button" aria-label="Current zoom level">100%</button>
+          <button class="btn" type="button" onclick="fitView()" aria-label="Fit the full tree into view">Fit</button>
+          <button class="btn" type="button" onclick="centerRoot()" aria-label="Center the root generation">Root</button>
+          <button class="btn" type="button" onclick="zoomAt(1.18)" aria-label="Zoom in">+</button>
+          <button class="btn" type="button" onclick="zoomAt(0.85)" aria-label="Zoom out">-</button>
+        </div>
+      </div>
+    </header>
+
+    <div id="desktop-panel-bar">
+      <button class="btn" id="desktop-overview-toggle" type="button" aria-expanded="false" aria-controls="overview-panel">About</button>
+      <button class="btn" id="desktop-legend-toggle" type="button" aria-expanded="false" aria-controls="legend-panel">Legend</button>
+      <button class="btn" id="desktop-relation-toggle" type="button" aria-expanded="false" aria-controls="relation-panel">Relation</button>
+    </div>
+
+    <aside class="panel" id="overview-panel">
+      <div class="panel-inner">
+        <div class="eyebrow">Overview</div>
+        <h2>Built for browser sharing</h2>
+        <p>This version keeps everything in one HTML file: no install, no plugin shell, and no external styling dependency. Open it locally, drag to pan, and use the controls or touch gestures to move through each generation.</p>
+        <div class="summary-grid">
+          <div class="summary-card">
+            <strong id="summary-members">0</strong>
+            <span>Members</span>
+          </div>
+          <div class="summary-card">
+            <strong id="summary-generations">0</strong>
+            <span>Generations</span>
+          </div>
+          <div class="summary-card">
+            <strong id="summary-branches">0</strong>
+            <span>Branches</span>
+          </div>
+        </div>
+        <div class="tip-list">
+          <div class="tip-item">
+            <strong>Drag</strong>
+            <span>Move the canvas in any direction.</span>
+          </div>
+          <div class="tip-item">
+            <strong>Scroll</strong>
+            <span>Zoom with the mouse wheel or trackpad pinch.</span>
+          </div>
+          <div class="tip-item">
+            <strong>Keys</strong>
+            <span>Use <code>+</code>, <code>-</code>, arrow keys, or <code>0</code> to refit the tree.</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <aside class="panel" id="legend-panel">
+      <div class="panel-inner">
+        <div class="eyebrow">Legend</div>
+        <h2>Branches and markers</h2>
+        <div class="legend-group" id="legend-branches"></div>
+        <div class="legend-divider"></div>
+        <div class="symbol-list">
+          <div class="symbol-chip">
+            <span class="symbol-preview dashed"></span>
+            <span>Dashed cards represent daughters shown without descendants in this chart.</span>
+          </div>
+          <div class="symbol-chip">
+            <span class="symbol-preview dimmed"></span>
+            <span>Muted cards indicate deceased family members.</span>
+          </div>
+          <div class="symbol-chip">
+            <span class="symbol-preview"></span>
+            <span>Badges flag details such as no recorded issue.</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <aside class="panel relation-panel" id="relation-panel">
+      <div class="panel-inner">
+        <div class="eyebrow">Relation Finder</div>
+        <h2>Find how you are related</h2>
+        <p>Type your own name from the chart, then another name. For duplicate names, use the suggestion that includes the parent and generation.</p>
+        <form class="relation-form" id="relation-form">
+          <div class="relation-field">
+            <label for="relation-self-input">Your name</label>
+            <input class="relation-input" id="relation-self-input" name="self" list="person-options" autocomplete="off" placeholder="Example: Rakesh">
+          </div>
+          <div class="relation-field">
+            <label for="relation-other-input">Other family member</label>
+            <input class="relation-input" id="relation-other-input" name="other" list="person-options" autocomplete="off" placeholder="Example: Harish Chandra">
+          </div>
+          <div class="relation-actions">
+            <button class="btn" type="submit">Show relation</button>
+            <button class="btn btn-clear" type="button" id="relation-clear-button">Clear</button>
+          </div>
+        </form>
+        <div class="relation-hint">This uses the names and parent links already present in the chart. Close family relations use Indian terms where possible, and wider branch relations fall back to genealogical labels such as cousins removed.</div>
+        <div class="relation-result" id="relation-result">
+          <div class="relation-kicker" id="relation-kicker">Relation Finder</div>
+          <div class="relation-term" id="relation-term">Choose two names</div>
+          <div class="relation-explain" id="relation-explain">The relation will appear here after you submit the two names.</div>
+          <div class="relation-examples" id="relation-examples"></div>
+        </div>
+      </div>
+    </aside>
+
+    <button class="btn" id="mobile-info-toggle" type="button" aria-expanded="false" aria-controls="mobile-panel">Info</button>
+
+    <div class="mobile-dock" aria-label="Mobile controls">
+      <button class="btn secondary zoom-readout" id="mobile-zoom-readout" type="button" aria-label="Current zoom level">100%</button>
+      <button class="btn" type="button" onclick="fitView()" aria-label="Fit the full tree into view">Fit</button>
+      <button class="btn" type="button" onclick="centerRoot()" aria-label="Center the root generation">Root</button>
+      <button class="btn" type="button" onclick="zoomAt(1.18)" aria-label="Zoom in">+</button>
+      <button class="btn" type="button" onclick="zoomAt(0.85)" aria-label="Zoom out">-</button>
+      <button class="btn" id="mobile-dock-info" type="button" aria-expanded="false" aria-controls="mobile-panel">Info</button>
+    </div>
+
+    <div class="panel" id="mobile-panel">
+      <div class="panel-inner">
+        <div class="eyebrow">Portable View</div>
+        <h2>Family tree guide</h2>
+        <p>Open this file directly in the browser, then drag, zoom, or use the top controls to inspect each branch.</p>
+        <div class="summary-grid">
+          <div class="summary-card">
+            <strong id="mobile-summary-members">0</strong>
+            <span>Members</span>
+          </div>
+          <div class="summary-card">
+            <strong id="mobile-summary-generations">0</strong>
+            <span>Generations</span>
+          </div>
+          <div class="summary-card">
+            <strong id="mobile-summary-branches">0</strong>
+            <span>Branches</span>
+          </div>
+        </div>
+        <div class="legend-divider"></div>
+        <div class="legend-group" id="mobile-legend-branches"></div>
+        <div class="legend-divider"></div>
+        <div class="panel-section">
+          <div class="eyebrow">Relation Finder</div>
+          <div class="panel-section-title">Find your relation</div>
+          <p class="panel-section-copy">Type your name and another name from the chart. If a name appears more than once, pick the suggestion that includes the parent.</p>
+          <form class="relation-form" id="mobile-relation-form">
+            <div class="relation-field">
+              <label for="mobile-relation-self-input">Your name</label>
+              <input class="relation-input" id="mobile-relation-self-input" name="self" list="person-options" autocomplete="off" placeholder="Example: Rakesh">
+            </div>
+            <div class="relation-field">
+              <label for="mobile-relation-other-input">Other family member</label>
+              <input class="relation-input" id="mobile-relation-other-input" name="other" list="person-options" autocomplete="off" placeholder="Example: Harish Chandra">
+            </div>
+            <div class="relation-actions">
+              <button class="btn" type="submit">Show relation</button>
+              <button class="btn btn-clear" type="button" id="mobile-relation-clear-button">Clear</button>
+            </div>
+          </form>
+          <div class="relation-result" id="mobile-relation-result">
+            <div class="relation-kicker" id="mobile-relation-kicker">Relation Finder</div>
+            <div class="relation-term" id="mobile-relation-term">Choose two names</div>
+            <div class="relation-explain" id="mobile-relation-explain">The relation will appear here after you submit the two names.</div>
+            <div class="relation-examples" id="mobile-relation-examples"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-credit">
+      <span class="page-credit-label">Developed by</span>
+      <span class="page-credit-name">Vaibhav Singh</span>
+    </div>
+
+    <datalist id="person-options"></datalist>
+    <div id="startup-error" role="alert" aria-live="polite">
+      <strong>Tree could not load fully</strong>
+      <span>The browser failed while starting the interactive view. Try a newer browser or reopen the file after downloading it locally.</span>
+    </div>
+
+    <div id="canvas-container">
+      <div id="tree-wrapper">
+        <svg id="lines" aria-hidden="true"></svg>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const PERSONS = [
+      { id: "P001", name: "Sheo Deen", gender: "M", gen: 0, branch: "root", status: "deceased", parentId: null },
+      { id: "P002", name: "Durga Prasad", gender: "M", gen: 1, branch: "root", status: "deceased", parentId: "P001" },
+      { id: "P003", name: "Mata Deen", gender: "M", gen: 1, branch: "root", status: "deceased", parentId: "P001", issueless: true },
+
+      { id: "P004", name: "Mahavir Prasad", gender: "M", gen: 2, branch: "A", status: "deceased", parentId: "P002" },
+      { id: "P005", name: "Mawa Lal", gender: "M", gen: 2, branch: "B", status: "deceased", parentId: "P002" },
+      { id: "P006", name: "Ram Adneen", gender: "M", gen: 2, branch: "C", status: "deceased", parentId: "P002" },
+      { id: "P007", name: "Brij Lal", gender: "M", gen: 2, branch: "D", status: "deceased", parentId: "P002" },
+      { id: "P006b", name: "Smt Mithana", gender: "F", gen: 2, branch: "root", parentId: "P002", marriedOut: true },
+      { id: "P006c", name: "Smt Sukhi", gender: "F", gen: 2, branch: "root", parentId: "P002", marriedOut: true },
+      { id: "P007a", name: "Poonam", gender: "F", gen: 2, branch: "root", parentId: "P002", marriedOut: true },
+      { id: "P007b", name: "Dhiraja", gender: "F", gen: 2, branch: "root", parentId: "P002", marriedOut: true },
+      { id: "P007c", name: "Phul Jhara", gender: "F", gen: 2, branch: "root", parentId: "P002", marriedOut: true },
+      { id: "P007d", name: "Jashoda", gender: "F", gen: 2, branch: "root", parentId: "P002", marriedOut: true },
+      { id: "P007e", name: "Bhagwan Dei", gender: "F", gen: 2, branch: "root", parentId: "P002", marriedOut: true },
+
+      { id: "P010", name: "Rameshwar Prasad", gender: "M", gen: 3, branch: "A", parentId: "P004" },
+      { id: "P011", name: "Gauri Shanker", gender: "M", gen: 3, branch: "A", parentId: "P004" },
+      { id: "P012", name: "Shyam Lal", gender: "M", gen: 3, branch: "A", parentId: "P004" },
+      { id: "P013", name: "Sheo Darshan", gender: "M", gen: 3, branch: "A", parentId: "P004" },
+
+      { id: "P020", name: "Shiv Balak", gender: "M", gen: 4, branch: "A", parentId: "P010" },
+      { id: "P021", name: "Rama", gender: "M", gen: 4, branch: "A", parentId: "P010" },
+      { id: "P022", name: "Harish Chandra", gender: "M", gen: 4, branch: "A", parentId: "P010" },
+      { id: "P023", name: "Gyana", gender: "F", gen: 4, branch: "A", parentId: "P010", marriedOut: true },
+
+      { id: "P030", name: "Rakesh", gender: "M", gen: 5, branch: "A", parentId: "P020" },
+      { id: "P031", name: "Poonam", gender: "F", gen: 5, branch: "A", parentId: "P020", marriedOut: true },
+      { id: "P032", name: "Alka", gender: "F", gen: 5, branch: "A", parentId: "P020", marriedOut: true },
+      { id: "P033", name: "Reena", gender: "F", gen: 5, branch: "A", parentId: "P020", marriedOut: true },
+
+      { id: "P040", name: "Nishtha", gender: "F", gen: 6, branch: "A", parentId: "P030" },
+      { id: "P041", name: "Krishna", gender: "M", gen: 6, branch: "A", parentId: "P030" },
+      { id: "P042", name: "Pratishtha", gender: "F", gen: 6, branch: "A", parentId: "P030" },
+
+      { id: "P050", name: "Sandhya", gender: "F", gen: 5, branch: "A", parentId: "P022", marriedOut: true },
+      { id: "P051", name: "Sandeep", gender: "M", gen: 5, branch: "A", parentId: "P022" },
+      { id: "P052", name: "Somi", gender: "F", gen: 5, branch: "A", parentId: "P022", marriedOut: true },
+
+      { id: "P053", name: "Karan", gender: "M", gen: 4, branch: "A", parentId: "P012" },
+      { id: "P054", name: "Sarveshwari", gender: "F", gen: 4, branch: "A", parentId: "P012", marriedOut: true },
+
+      { id: "P055", name: "Anupma", gender: "F", gen: 5, branch: "A", parentId: "P053", marriedOut: true },
+      { id: "P056", name: "Ankit", gender: "M", gen: 5, branch: "A", parentId: "P053" },
+      { id: "P057", name: "Roli", gender: "F", gen: 5, branch: "A", parentId: "P053", marriedOut: true },
+
+      { id: "P406a", name: "Unknown Daughter 1", gender: "F", gen: 4, branch: "A", parentId: "P013", marriedOut: true },
+      { id: "P406", name: "Kalawati", gender: "F", gen: 4, branch: "A", parentId: "P013", marriedOut: true },
+      { id: "P406b", name: "Unknown Daughter 2", gender: "F", gen: 4, branch: "A", parentId: "P013", marriedOut: true },
+      { id: "P400", name: "Newal Kishore", gender: "M", gen: 4, branch: "A", parentId: "P013" },
+      { id: "P401", name: "Raj Kishore", gender: "M", gen: 4, branch: "A", parentId: "P013" },
+
+      { id: "P402", name: "Savita", gender: "F", gen: 5, branch: "A", parentId: "P400", marriedOut: true },
+      { id: "P403", name: "Ranjana", gender: "F", gen: 5, branch: "A", parentId: "P400", marriedOut: true },
+      { id: "P404", name: "Babloo", gender: "M", gen: 5, branch: "A", parentId: "P400" },
+
+      { id: "P405", name: "Swati", gender: "F", gen: 5, branch: "A", parentId: "P401", marriedOut: true },
+
+      { id: "P210", name: "Raja Ram", gender: "M", gen: 4, branch: "A", parentId: "P011" },
+      { id: "P211", name: "Manju", gender: "F", gen: 5, branch: "A", parentId: "P210", marriedOut: true },
+      { id: "P212", name: "Anju", gender: "F", gen: 5, branch: "A", parentId: "P210", marriedOut: true },
+      { id: "P213", name: "Neetu", gender: "F", gen: 5, branch: "A", parentId: "P210", marriedOut: true },
+      { id: "P214", name: "Amit", gender: "M", gen: 5, branch: "A", parentId: "P210", issueless: true },
+
+      { id: "P220", name: "Shiva Ram", gender: "M", gen: 3, branch: "B", parentId: "P005" },
+      { id: "P223", name: "Ram Singh", gender: "M", gen: 3, branch: "B", parentId: "P005" },
+      { id: "P221", name: "Shiva Rani", gender: "F", gen: 3, branch: "B", parentId: "P005", marriedOut: true },
+      { id: "P222", name: "Shanti", gender: "F", gen: 3, branch: "B", parentId: "P005", marriedOut: true },
+      { id: "P230", name: "Mahesh Prasad", gender: "M", gen: 4, branch: "B", parentId: "P220", issueless: true },
+      { id: "P231", name: "Rajeshwari", gender: "F", gen: 4, branch: "B", parentId: "P220", marriedOut: true },
+      { id: "P232", name: "Ratnesh", gender: "M", gen: 4, branch: "B", parentId: "P223", status: "deceased" },
+      { id: "P233", name: "Brijesh", gender: "M", gen: 4, branch: "B", parentId: "P223", status: "deceased" },
+      { id: "P234", name: "Mridulesh", gender: "M", gen: 4, branch: "B", parentId: "P223" },
+      { id: "P235", name: "Jyoti", gender: "F", gen: 4, branch: "B", parentId: "P223", marriedOut: true },
+      { id: "P236", name: "Swapnil", gender: "M", gen: 5, branch: "B", parentId: "P232" },
+      { id: "P237", name: "Shubham", gender: "M", gen: 5, branch: "B", parentId: "P233" },
+
+      { id: "P200", name: "Smt Ram Rani", gender: "F", gen: 3, branch: "C", parentId: "P006", marriedOut: true },
+
+      { id: "P201", name: "Janak Dulari", gender: "F", gen: 3, branch: "D", parentId: "P007", marriedOut: true },
+      { id: "P202", name: "Kamla", gender: "F", gen: 3, branch: "D", parentId: "P007", marriedOut: true },
+      { id: "P203", name: "Bimla", gender: "F", gen: 3, branch: "D", parentId: "P007", marriedOut: true },
+      { id: "P102", name: "Jamuna", gender: "F", gen: 3, branch: "D", parentId: "P007", marriedOut: true },
+      { id: "P103", name: "Kiran", gender: "F", gen: 3, branch: "D", parentId: "P007", marriedOut: true },
+      { id: "P007f", name: "Smita", gender: "F", gen: 3, branch: "D", parentId: "P007", marriedOut: true },
+      { id: "P100", name: "Tara Chandra", gender: "M", gen: 3, branch: "D", status: "deceased", parentId: "P007" },
+      { id: "P104", name: "Ashok", gender: "M", gen: 3, branch: "D", status: "deceased", parentId: "P007" },
+      { id: "P105", name: "Avadesh", gender: "M", gen: 3, branch: "D", parentId: "P007" },
+      { id: "P101", name: "Lalta Prasad", gender: "M", gen: 3, branch: "D", parentId: "P007", status: "deceased" },
+
+      { id: "P300", name: "Praveen", gender: "M", gen: 4, branch: "D", parentId: "P100" },
+      { id: "P301", name: "Ravindra", gender: "M", gen: 4, branch: "D", parentId: "P100" },
+      { id: "P302", name: "Avaneesh", gender: "M", gen: 4, branch: "D", parentId: "P100" },
+      { id: "P303", name: "Kapil", gender: "M", gen: 4, branch: "D", parentId: "P100" },
+      { id: "P304", name: "Meenal", gender: "F", gen: 4, branch: "D", parentId: "P100", marriedOut: true },
+
+      { id: "P310", name: "Avantika", gender: "F", gen: 5, branch: "D", parentId: "P300", marriedOut: true },
+      { id: "P311", name: "Ankur", gender: "M", gen: 5, branch: "D", parentId: "P300" },
+      { id: "P318", name: "Sidak", gender: "M", gen: 6, branch: "D", parentId: "P311" },
+
+      { id: "P312", name: "Raghvendra", gender: "M", gen: 5, branch: "D", parentId: "P301" },
+      { id: "P313", name: "Shivendra", gender: "M", gen: 5, branch: "D", parentId: "P301" },
+
+      { id: "P314", name: "Srishti", gender: "F", gen: 5, branch: "D", parentId: "P302", marriedOut: true },
+      { id: "P315", name: "Anushka", gender: "F", gen: 5, branch: "D", parentId: "P302", marriedOut: true },
+
+      { id: "P316", name: "Vaibhav", gender: "M", gen: 5, branch: "D", parentId: "P303" },
+      { id: "P317", name: "Shivangi", gender: "F", gen: 5, branch: "D", parentId: "P303" },
+
+      { id: "P113", name: "Anshul", gender: "M", gen: 4, branch: "D", parentId: "P104" },
+      { id: "P114", name: "Anshuman", gender: "M", gen: 4, branch: "D", parentId: "P104" },
+
+      { id: "P110", name: "Anoop", gender: "M", gen: 4, branch: "D", parentId: "P105" },
+      { id: "P111", name: "Toshi", gender: "F", gen: 4, branch: "D", parentId: "P105", marriedOut: true },
+      { id: "P112", name: "Richa", gender: "F", gen: 4, branch: "D", parentId: "P105", marriedOut: true },
+
+      { id: "P115", name: "Ishanvi", gender: "F", gen: 5, branch: "D", parentId: "P110" },
+      { id: "P116", name: "Ishaan", gender: "M", gen: 5, branch: "D", parentId: "P110" }
+    ];
+
+    const BRANCH_META = {
+      root: { label: "Root", founder: "Sheo Deen Line", color: "#8d9aac", surface: "#efe8da", stroke: "#c7b49f", line: "#8d9aac" },
+      A: { label: "Branch A", founder: "Mahavir Prasad", color: "#3d6ea8", surface: "#eef4ff", stroke: "#b8c8ea", line: "#4c7ec5" },
+      B: { label: "Branch B", founder: "Mawa Lal", color: "#2f8b5b", surface: "#edf8f0", stroke: "#b7dbbf", line: "#399a68" },
+      C: { label: "Branch C", founder: "Ram Adneen", color: "#c66a2c", surface: "#fff4ea", stroke: "#edc7aa", line: "#d67a3c" },
+      D: { label: "Branch D", founder: "Brij Lal", color: "#7f5ab6", surface: "#f5efff", stroke: "#d3c2f0", line: "#8a62c6" }
+    };
+
+    const ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII"];
+    const CW = 184;
+    const CH = 112;
+    const HG = 34;
+    const VG = 104;
+    const PAD = 132;
+    const MIN_SCALE = 0.1;
+    const MAX_SCALE = 3.2;
+
+    const byId = {};
+    PERSONS.forEach((person) => {
+      byId[person.id] = person;
+    });
+    const kids = {};
+
+    PERSONS.forEach((person) => {
+      if (!person.parentId) return;
+      if (!kids[person.parentId]) kids[person.parentId] = [];
+      kids[person.parentId].push(person.id);
+    });
+
+    function subtreeWidth(id) {
+      const children = kids[id] || [];
+      if (!children.length) return CW;
+      return Math.max(CW, children.reduce((sum, childId) => sum + subtreeWidth(childId), 0) + HG * (children.length - 1));
+    }
+
+    const pos = {};
+    function layout(id, centerX, topY) {
+      pos[id] = { x: centerX - CW / 2, y: topY };
+      const children = kids[id] || [];
+      if (!children.length) return;
+      const widths = children.map(subtreeWidth);
+      const total = widths.reduce((sum, width) => sum + width, 0) + HG * (children.length - 1);
+      let cursor = centerX - total / 2;
+      children.forEach((childId, index) => {
+        layout(childId, cursor + widths[index] / 2, topY + CH + VG);
+        cursor += widths[index] + HG;
+      });
+    }
+
+    const root = PERSONS.find((person) => !person.parentId);
+    layout(root.id, 0, 0);
+
+    let minX = Infinity;
+    let maxX = -Infinity;
+    let maxY = 0;
+    Object.values(pos).forEach(({ x, y }) => {
+      minX = Math.min(minX, x);
+      maxX = Math.max(maxX, x + CW);
+      maxY = Math.max(maxY, y + CH);
+    });
+
+    const TW = maxX - minX + PAD * 2;
+    const TH = maxY + PAD * 2;
+    const OX = -minX + PAD;
+    const OY = PAD;
+
+    const Elements = {
+      wrap: document.getElementById("tree-wrapper"),
+      svg: document.getElementById("lines"),
+      cont: document.getElementById("canvas-container"),
+      mobilePanel: document.getElementById("mobile-panel"),
+      mobileInfoToggle: document.getElementById("mobile-info-toggle"),
+      mobileDockInfo: document.getElementById("mobile-dock-info"),
+      overviewPanel: document.getElementById("overview-panel"),
+      legendPanel: document.getElementById("legend-panel"),
+      relationPanel: document.getElementById("relation-panel"),
+      desktopOverviewToggle: document.getElementById("desktop-overview-toggle"),
+      desktopLegendToggle: document.getElementById("desktop-legend-toggle"),
+      desktopRelationToggle: document.getElementById("desktop-relation-toggle"),
+      zoomReadout: document.getElementById("zoom-readout"),
+      mobileZoomReadout: document.getElementById("mobile-zoom-readout"),
+      personOptions: document.getElementById("person-options"),
+      startupError: document.getElementById("startup-error")
+    };
+
+    const LayoutMetrics = {
+      cardWidth: CW,
+      cardHeight: CH,
+      horizontalGap: HG,
+      verticalGap: VG,
+      pad: PAD,
+      totalWidth: TW,
+      totalHeight: TH,
+      offsetX: OX,
+      offsetY: OY
+    };
+
+    Elements.wrap.style.width = `${LayoutMetrics.totalWidth}px`;
+    Elements.wrap.style.height = `${LayoutMetrics.totalHeight}px`;
+    Elements.svg.setAttribute("width", LayoutMetrics.totalWidth);
+    Elements.svg.setAttribute("height", LayoutMetrics.totalHeight);
+
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function setText(id, value) {
+      const node = document.getElementById(id);
+      if (node) node.textContent = String(value);
+    }
+
+    function normalizeKey(value) {
+      return String(value || "")
+        .trim()
+        .replace(/\s+/g, " ")
+        .toLowerCase();
+    }
+
+    function personLookupLabel(person) {
+      if (!person.parentId) {
+        return `${person.name} (root, G${person.gen + 1})`;
+      }
+      const parent = byId[person.parentId];
+      return `${person.name} (child of ${parent ? parent.name : "Unknown"}, G${person.gen + 1})`;
+    }
+
+    const nameToIds = new Map();
+    const labelToId = new Map();
+    const lookupLabelById = {};
+    PERSONS.forEach((person) => {
+      const nameKey = normalizeKey(person.name);
+      const group = nameToIds.get(nameKey) || [];
+      group.push(person.id);
+      nameToIds.set(nameKey, group);
+      const label = personLookupLabel(person);
+      lookupLabelById[person.id] = label;
+      labelToId.set(normalizeKey(label), person.id);
+    });
+
+    const datalistValues = [];
+    PERSONS.forEach((person) => {
+      const ids = nameToIds.get(normalizeKey(person.name)) || [];
+      datalistValues.push(ids.length > 1 ? lookupLabelById[person.id] : person.name);
+    });
+    Elements.personOptions.innerHTML = Array.from(new Set(datalistValues))
+      .sort((a, b) => a.localeCompare(b))
+      .map((value) => `<option value="${escapeHtml(value)}"></option>`)
+      .join("");
+
+    const TreeSummary = {
+      memberCount: PERSONS.length,
+      generationCount: Math.max(...PERSONS.map((person) => person.gen)) + 1,
+      branchKeys: ["A", "B", "C", "D"],
+      get branchCounts() {
+        return this.branchKeys.map((branch) => ({
+          branch,
+          count: PERSONS.filter((person) => person.branch === branch).length
+        }));
+      },
+      renderStats() {
+        setText("summary-members", this.memberCount);
+        setText("summary-generations", this.generationCount);
+        setText("summary-branches", this.branchKeys.length);
+        setText("mobile-summary-members", this.memberCount);
+        setText("mobile-summary-generations", this.generationCount);
+        setText("mobile-summary-branches", this.branchKeys.length);
+        setText("member-count-chip", this.memberCount);
+        setText("generation-count-chip", this.generationCount);
+        setText("branch-count-chip", this.branchKeys.length);
+      },
+      renderBranchLegend(targetId) {
+        const target = document.getElementById(targetId);
+        if (!target) return;
+        target.innerHTML = this.branchCounts.map(({ branch, count }) => {
+        const meta = BRANCH_META[branch];
+        return [
+          '<div class="legend-row">',
+            '<div class="legend-row-left">',
+              `<span class="legend-dot" style="background:${meta.color}"></span>`,
+              `<span>${meta.label} &middot; ${meta.founder}</span>`,
+            "</div>",
+            `<span class="legend-tag">${count}</span>`,
+          "</div>"
+        ].join("");
+        }).join("");
+      },
+      renderLegends() {
+        this.renderBranchLegend("legend-branches");
+        this.renderBranchLegend("mobile-legend-branches");
+      }
+    };
+
+    TreeSummary.renderStats();
+    TreeSummary.renderLegends();
+
+    // Name lookup helpers keep the input handling separate from kinship rules.
+    function resolvePersonInput(value) {
+      const key = normalizeKey(value);
+      if (!key) return { state: "empty" };
+      if (labelToId.has(key)) return { state: "ok", person: byId[labelToId.get(key)] };
+      const ids = nameToIds.get(key);
+      if (!ids || !ids.length) return { state: "missing" };
+      if (ids.length === 1) return { state: "ok", person: byId[ids[0]] };
+      return {
+        state: "ambiguous",
+        labels: ids.map((id) => lookupLabelById[id])
+      };
+    }
+
+    const NameLookup = {
+      normalizeKey,
+      personLookupLabel,
+      resolveInput: resolvePersonInput,
+      labelsById: lookupLabelById
+    };
+
+    // Graph traversal helpers model the family tree independent of UI labels.
+    function getAncestorLine(personId) {
+      const line = [];
+      let current = byId[personId];
+      while (current) {
+        line.push(current);
+        current = current.parentId ? byId[current.parentId] : null;
+      }
+      return line;
+    }
+
+    function getAncestorAtDistance(personId, distance) {
+      let current = byId[personId];
+      let steps = distance;
+      while (current && steps > 0) {
+        current = current.parentId ? byId[current.parentId] : null;
+        steps -= 1;
+      }
+      return current || null;
+    }
+
+    function getDescendantPath(ancestorId, descendantId) {
+      const path = [];
+      let current = byId[descendantId];
+      while (current && current.id !== ancestorId) {
+        path.push(current);
+        current = current.parentId ? byId[current.parentId] : null;
+      }
+      return current ? path.reverse() : [];
+    }
+
+    function siblingIds(person) {
+      if (!person || !person.parentId) return [];
+      return kids[person.parentId] || [];
+    }
+
+    function isSibling(personA, personB) {
+      return Boolean(
+        personA &&
+        personB &&
+        personA.parentId &&
+        personA.parentId === personB.parentId &&
+        personA.id !== personB.id
+      );
+    }
+
+    function isAncestor(ancestorId, personId) {
+      return getAncestorLine(personId).some((person) => person.id === ancestorId);
+    }
+
+    function distanceToAncestor(personId, ancestorId) {
+      const line = getAncestorLine(personId);
+      const index = line.findIndex((person) => person.id === ancestorId);
+      return index;
+    }
+
+    const FamilyGraph = {
+      getAncestorLine,
+      getAncestorAtDistance,
+      getDescendantPath,
+      siblingIds,
+      isSibling,
+      isAncestor,
+      distanceToAncestor,
+      findCommonAncestorDetails,
+      buildConnectionTrail
+    };
+
+    // Relation term helpers only deal with wording and label formatting.
+    function ordinalWord(value) {
+      const words = ["Zero", "First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh", "Eighth", "Ninth", "Tenth"];
+      return words[value] || `${value}th`;
+    }
+
+    function formatTimes(value) {
+      return value === 1 ? "1x" : `${value}x`;
+    }
+
+    function buildCousinLabel(degree, removed) {
+      const base = `${ordinalWord(degree)} Cousin`;
+      if (removed === 0) return base;
+      if (removed === 1) return `${base} Once Removed`;
+      if (removed === 2) return `${base} Twice Removed`;
+      return `${base} ${removed} Times Removed`;
+    }
+
+    function buildGreatLabel(base, greatCount) {
+      if (greatCount <= 0) return base;
+      if (greatCount === 1) return `Great-${base}`;
+      return `${formatTimes(greatCount)} Great-${base}`;
+    }
+
+    function buildRemovedExplanation(removed, target, details) {
+      if (removed === 0) {
+        return `You and ${target.name} are in the same generation and share ${details.ancestor.name} as a common ancestor.`;
+      }
+      if (removed === 1) {
+        return `${target.name} is one generation ${details.targetDistance < details.selfDistance ? "above" : "below"} you, and you share ${details.ancestor.name} as a common ancestor.`;
+      }
+      if (removed === 2) {
+        return `${target.name} is two generations ${details.targetDistance < details.selfDistance ? "above" : "below"} you, and you share ${details.ancestor.name} as a common ancestor.`;
+      }
+      return `${target.name} is ${removed} generations ${details.targetDistance < details.selfDistance ? "above" : "below"} you, and you share ${details.ancestor.name} as a common ancestor.`;
+    }
+
+    const RelationTerms = {
+      ordinalWord,
+      formatTimes,
+      buildCousinLabel,
+      buildGreatLabel,
+      buildRemovedExplanation
+    };
+
+    function findCommonAncestorDetails(firstId, secondId) {
+      const firstLine = getAncestorLine(firstId);
+      const firstIndex = new Map(firstLine.map((person, index) => [person.id, index]));
+      const secondLine = getAncestorLine(secondId);
+      for (let index = 0; index < secondLine.length; index += 1) {
+        const person = secondLine[index];
+        if (firstIndex.has(person.id)) {
+          return {
+            ancestor: person,
+            selfDistance: firstIndex.get(person.id),
+            targetDistance: index
+          };
+        }
+      }
+      return null;
+    }
+
+    function buildConnectionTrail(firstId, secondId) {
+      const details = findCommonAncestorDetails(firstId, secondId);
+      if (!details) {
+        return {
+          details: null,
+          personIds: [],
+          edgeChildIds: []
+        };
+      }
+
+      const selfPath = getAncestorLine(firstId).slice(0, details.selfDistance + 1);
+      const targetPath = getAncestorLine(secondId).slice(0, details.targetDistance + 1);
+
+      return {
+        details,
+        personIds: Array.from(new Set([...selfPath, ...targetPath].map((person) => person.id))),
+        edgeChildIds: Array.from(new Set([
+          ...selfPath.slice(0, -1).map((person) => person.id),
+          ...targetPath.slice(0, -1).map((person) => person.id)
+        ]))
+      };
+    }
+
+    function describeSiblingRelation(self, target) {
+      const siblings = siblingIds(self);
+      const selfIndex = siblings.indexOf(self.id);
+      const targetIndex = siblings.indexOf(target.id);
+      const older = targetIndex > -1 && selfIndex > -1 && targetIndex < selfIndex;
+      if (target.gender === "M") {
+        return {
+          term: older ? "Bade Bhai" : "Chhote Bhai",
+          explain: `${target.name} is your ${older ? "elder" : "younger"} brother.`
+        };
+      }
+      return {
+        term: older ? "Badi Behen" : "Chhoti Behen",
+        explain: `${target.name} is your ${older ? "elder" : "younger"} sister.`
+      };
+    }
+
+    function describeAncestorRelation(self, target, distance) {
+      if (distance === 1) {
+        return {
+          term: target.gender === "F" ? "Maa" : "Papa",
+          explain: `${target.name} is your ${target.gender === "F" ? "mother" : "father"}.`
+        };
+      }
+
+      if (distance === 2) {
+        const parent = getAncestorAtDistance(self.id, 1);
+        const paternal = parent && parent.gender === "M";
+        if (target.gender === "M") {
+          return {
+            term: paternal ? "Dada / Grandfather" : "Nana / Grandfather",
+            explain: `${target.name} is your ${paternal ? "paternal grandfather" : "maternal grandfather"}.`
+          };
+        }
+        return {
+          term: paternal ? "Dadi / Grandmother" : "Nani / Grandmother",
+          explain: `${target.name} is your ${paternal ? "paternal grandmother" : "maternal grandmother"}.`
+        };
+      }
+
+      const base = target.gender === "F" ? "Grandmother" : "Grandfather";
+      const term = buildGreatLabel(base, distance - 2);
+      return {
+        term,
+        explain: `${target.name} is your ${term.toLowerCase()}.`
+      };
+    }
+
+    function describeDescendantRelation(self, target, distance) {
+      if (distance === 1) {
+        return {
+          term: target.gender === "F" ? "Daughter" : "Son",
+          explain: `${target.name} is your ${target.gender === "F" ? "daughter" : "son"}.`
+        };
+      }
+
+      if (distance === 2) {
+        const path = getDescendantPath(self.id, target.id);
+        const child = path[0];
+        const throughSon = child && child.gender === "M";
+        if (target.gender === "M") {
+          return {
+            term: throughSon ? "Pota" : "Naati",
+            explain: `${target.name} is your ${throughSon ? "grandson through your son" : "grandson through your daughter"}.`
+          };
+        }
+        return {
+          term: throughSon ? "Poti" : "Naatin",
+          explain: `${target.name} is your ${throughSon ? "granddaughter through your son" : "granddaughter through your daughter"}.`
+        };
+      }
+
+      const base = target.gender === "F" ? "Granddaughter" : "Grandson";
+      const term = buildGreatLabel(base, distance - 2);
+      return {
+        term,
+        explain: `${target.name} is your ${term.toLowerCase()}.`
+      };
+    }
+
+    function describeAuntOrUncleRelation(self, target, selfDistance) {
+      if (selfDistance === 2) {
+        const parent = getAncestorAtDistance(self.id, 1);
+        if (parent && parent.gender === "M") {
+          if (target.gender === "M") {
+            const siblings = siblingIds(parent);
+            const parentIndex = siblings.indexOf(parent.id);
+            const targetIndex = siblings.indexOf(target.id);
+            const older = targetIndex > -1 && parentIndex > -1 && targetIndex < parentIndex;
+            return {
+              term: older ? "Tau" : "Chacha",
+              explain: `${target.name} is your father's ${older ? "elder" : "younger"} brother.`
+            };
+          }
+          return {
+            term: "Bua",
+            explain: `${target.name} is your father's sister.`
+          };
+        }
+
+        return {
+          term: target.gender === "M" ? "Mama" : "Mausi",
+          explain: `${target.name} is your mother's ${target.gender === "M" ? "brother" : "sister"}.`
+        };
+      }
+
+      if (selfDistance === 3) {
+        const parent = getAncestorAtDistance(self.id, 1);
+        const paternal = parent && parent.gender === "M";
+        if (target.gender === "M") {
+          return {
+            term: paternal ? "Baba / Granduncle" : "Nana / Granduncle",
+            explain: `${target.name} is your ${paternal ? "grandfather's" : "maternal grandfather's"} brother.`
+          };
+        }
+        return {
+          term: paternal ? "Badi Dadi / Grandaunt" : "Nani / Grandaunt",
+          explain: `${target.name} is your ${paternal ? "grandfather's" : "maternal grandfather's"} sister.`
+        };
+      }
+
+      const base = target.gender === "F" ? "Grandaunt" : "Granduncle";
+      const term = buildGreatLabel(base, selfDistance - 3);
+      return {
+        term,
+        explain: `${target.name} is your ${term.toLowerCase()}.`
+      };
+    }
+
+    function describeNieceOrNephewRelation(self, target, targetDistance) {
+      if (targetDistance === 2) {
+        const sibling = getAncestorAtDistance(target.id, 1);
+        if (sibling && sibling.gender === "M") {
+          return {
+            term: target.gender === "F" ? "Bhatiji" : "Bhatija",
+            explain: `${target.name} is your brother's ${target.gender === "F" ? "daughter" : "son"}.`
+          };
+        }
+        return {
+          term: target.gender === "F" ? "Bhanji" : "Bhanja",
+          explain: `${target.name} is your sister's ${target.gender === "F" ? "daughter" : "son"}.`
+        };
+      }
+
+      const base = target.gender === "F" ? "Grandniece" : "Grandnephew";
+      const term = buildGreatLabel(base, targetDistance - 3);
+      return {
+        term,
+        explain: `${target.name} is your ${term.toLowerCase()}.`
+      };
+    }
+
+    function describeCousinLikeRelation(self, target, details) {
+      const degree = Math.min(details.selfDistance, details.targetDistance) - 1;
+      const removed = Math.abs(details.selfDistance - details.targetDistance);
+      const term = buildCousinLabel(degree, removed);
+      return {
+        term,
+        explain: buildRemovedExplanation(removed, target, details),
+        examples: `${term} means your family lines meet at ${details.ancestor.name}.`
+      };
+    }
+
+    // RelationEngine turns graph positions into kinship labels.
+    function computeRelation(self, target) {
+      if (self.id === target.id) {
+        return {
+          term: "Self",
+          explain: `${target.name} is you.`,
+          examples: "Pick another family member to compare a relation."
+        };
+      }
+
+      const details = findCommonAncestorDetails(self.id, target.id);
+      if (!details) {
+        return {
+          term: "Relation not found",
+          explain: `${target.name} could not be linked from the available parent-child paths in this chart.`
+        };
+      }
+
+      const { selfDistance, targetDistance } = details;
+
+      if (targetDistance === 0) return describeAncestorRelation(self, target, selfDistance);
+      if (selfDistance === 0) return describeDescendantRelation(self, target, targetDistance);
+
+      if (selfDistance === 1 && targetDistance === 1 && isSibling(self, target)) {
+        return describeSiblingRelation(self, target);
+      }
+
+      if (targetDistance === 1) {
+        return describeAuntOrUncleRelation(self, target, selfDistance);
+      }
+
+      if (selfDistance === 1) {
+        return describeNieceOrNephewRelation(self, target, targetDistance);
+      }
+
+      return describeCousinLikeRelation(self, target, details);
+    }
+
+    const RelationEngine = {
+      compute: computeRelation,
+      describeAncestorRelation,
+      describeDescendantRelation,
+      describeSiblingRelation,
+      describeAuntOrUncleRelation,
+      describeNieceOrNephewRelation,
+      describeCousinLikeRelation
+    };
+
+    // Relation UI maps input state to readable result panels.
+    function writeRelationResult(prefix, result) {
+      setText(`${prefix}relation-kicker`, result.kicker || "Relation Finder");
+      setText(`${prefix}relation-term`, result.term);
+      setText(`${prefix}relation-explain`, result.explain || "");
+      setText(`${prefix}relation-examples`, result.examples || "");
+    }
+
+    function resetRelationResult(prefix) {
+      TreeRenderer.clearHighlight();
+      writeRelationResult(prefix, {
+        kicker: "Relation Finder",
+        term: "Choose two names",
+        explain: "The relation will appear here after you submit the two names.",
+        examples: ""
+      });
+    }
+
+    function runRelationLookup(selfValue, otherValue, prefix) {
+      const selfMatch = NameLookup.resolveInput(selfValue);
+      if (selfMatch.state === "empty") {
+        TreeRenderer.clearHighlight();
+        writeRelationResult(prefix, {
+          term: "Choose your name",
+          explain: "Start by entering your own name from the chart."
+        });
+        return;
+      }
+      if (selfMatch.state === "missing") {
+        TreeRenderer.clearHighlight();
+        writeRelationResult(prefix, {
+          term: "Name not found",
+          explain: `No chart entry matched "${selfValue}".`,
+          examples: "Try the exact chart name or pick a suggestion from the list."
+        });
+        return;
+      }
+      if (selfMatch.state === "ambiguous") {
+        TreeRenderer.clearHighlight();
+        writeRelationResult(prefix, {
+          term: "Multiple matches",
+          explain: `"${selfValue}" appears more than once in the chart.`,
+          examples: selfMatch.labels.join(" | ")
+        });
+        return;
+      }
+
+      const otherMatch = NameLookup.resolveInput(otherValue);
+      if (otherMatch.state === "empty") {
+        TreeRenderer.clearHighlight();
+        writeRelationResult(prefix, {
+          term: "Choose another name",
+          explain: "Enter the second family member to compare the relation."
+        });
+        return;
+      }
+      if (otherMatch.state === "missing") {
+        TreeRenderer.clearHighlight();
+        writeRelationResult(prefix, {
+          term: "Name not found",
+          explain: `No chart entry matched "${otherValue}".`,
+          examples: "Try the exact chart name or pick a suggestion from the list."
+        });
+        return;
+      }
+      if (otherMatch.state === "ambiguous") {
+        TreeRenderer.clearHighlight();
+        writeRelationResult(prefix, {
+          term: "Multiple matches",
+          explain: `"${otherValue}" appears more than once in the chart.`,
+          examples: otherMatch.labels.join(" | ")
+        });
+        return;
+      }
+
+      const relation = RelationEngine.compute(selfMatch.person, otherMatch.person);
+      const trail = FamilyGraph.buildConnectionTrail(selfMatch.person.id, otherMatch.person.id);
+      relation.kicker = `${otherMatch.person.name} is your`;
+      relation.examples = relation.examples
+        ? `${relation.examples} The connecting path is highlighted on the tree.`
+        : "The connecting path is highlighted on the tree.";
+      TreeRenderer.highlightTrail(trail.personIds, trail.edgeChildIds);
+      writeRelationResult(prefix, relation);
+    }
+
+    const RelationUI = {
+      writeResult: writeRelationResult,
+      resetResult: resetRelationResult,
+      runLookup: runRelationLookup
+    };
+
+    const RelationForms = [
+      {
+        formId: "relation-form",
+        selfId: "relation-self-input",
+        otherId: "relation-other-input",
+        clearId: "relation-clear-button",
+        prefix: ""
+      },
+      {
+        formId: "mobile-relation-form",
+        selfId: "mobile-relation-self-input",
+        otherId: "mobile-relation-other-input",
+        clearId: "mobile-relation-clear-button",
+        prefix: "mobile-"
+      }
+    ];
+
+    const TreeRenderer = {
+      cardById: new Map(),
+      lineByChildId: new Map(),
+      renderGenerationGuides() {
+        const generationY = {};
+        PERSONS.forEach((person) => {
+          if (generationY[person.gen] !== undefined) return;
+          generationY[person.gen] = pos[person.id].y + LayoutMetrics.offsetY - 20;
+        });
+
+        Object.entries(generationY).forEach(([generation, y]) => {
+          const guide = document.createElementNS("http://www.w3.org/2000/svg", "line");
+          guide.setAttribute("x1", 0);
+          guide.setAttribute("x2", LayoutMetrics.totalWidth);
+          guide.setAttribute("y1", y + 20);
+          guide.setAttribute("y2", y + 20);
+          guide.setAttribute("stroke", "rgba(117, 84, 61, 0.15)");
+          guide.setAttribute("stroke-width", "1");
+          guide.setAttribute("stroke-dasharray", "6 7");
+          Elements.svg.appendChild(guide);
+
+          const marker = document.createElement("div");
+          marker.className = "generation-marker";
+          marker.style.top = `${Math.max(8, y - 14)}px`;
+          marker.textContent = `Generation ${ROMAN[Number(generation)] || Number(generation) + 1}`;
+          Elements.wrap.appendChild(marker);
+        });
+      },
+      renderConnections() {
+        PERSONS.forEach((person) => {
+          if (!person.parentId || !pos[person.id] || !pos[person.parentId]) return;
+          const parent = pos[person.parentId];
+          const child = pos[person.id];
+          const px = parent.x + LayoutMetrics.offsetX + LayoutMetrics.cardWidth / 2;
+          const py = parent.y + LayoutMetrics.offsetY + LayoutMetrics.cardHeight;
+          const cx = child.x + LayoutMetrics.offsetX + LayoutMetrics.cardWidth / 2;
+          const cy = child.y + LayoutMetrics.offsetY;
+          const midY = py + (cy - py) * 0.48;
+          const meta = BRANCH_META[person.branch] || BRANCH_META.root;
+
+          const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+          path.setAttribute("class", "tree-line");
+          path.setAttribute("d", `M${px},${py} C${px},${midY} ${cx},${midY} ${cx},${cy}`);
+          path.setAttribute("stroke", meta.line);
+          path.setAttribute("stroke-width", person.marriedOut ? "1.3" : "2.1");
+          path.setAttribute("stroke-linecap", "round");
+          path.setAttribute("fill", "none");
+          path.setAttribute("opacity", person.marriedOut ? "0.34" : "0.48");
+          if (person.marriedOut) path.setAttribute("stroke-dasharray", "5 5");
+          Elements.svg.appendChild(path);
+          this.lineByChildId.set(person.id, path);
+        });
+      },
+      createCard(person) {
+        const coords = pos[person.id];
+        if (!coords) return null;
+
+        const meta = BRANCH_META[person.branch] || BRANCH_META.root;
+        const isUnknownName = /^Unknown Daughter/.test(person.name);
+        const card = document.createElement("div");
+        card.className = [
+          "card",
+          person.gen <= 1 ? "card-root" : "",
+          isUnknownName ? "card-unknown" : "",
+          person.marriedOut ? "married-out" : "",
+          person.status === "deceased" ? "deceased" : ""
+        ].filter(Boolean).join(" ");
+        card.dataset.personId = person.id;
+
+        card.style.left = `${coords.x + LayoutMetrics.offsetX}px`;
+        card.style.top = `${coords.y + LayoutMetrics.offsetY}px`;
+        card.style.setProperty("--accent", meta.color);
+        card.style.setProperty("--surface", meta.surface);
+        card.style.setProperty("--stroke", meta.stroke);
+
+        const metaPills = [
+          `<span class="meta-pill">G${person.gen + 1}</span>`,
+          `<span class="meta-pill">${person.gender === "F" ? "Female" : "Male"}</span>`
+        ];
+
+        const badges = [];
+        if (person.status === "deceased") badges.push('<span class="badge badge-deceased">Deceased</span>');
+        if (person.issueless) badges.push('<span class="badge badge-issueless">No issue</span>');
+        if (person.marriedOut) badges.push('<span class="badge badge-married">Married out</span>');
+        if (isUnknownName) badges.push('<span class="badge badge-unknown">Name unknown</span>');
+
+        card.innerHTML = [
+          '<div class="card-inner">',
+          `<div class="card-name">${escapeHtml(person.name)}</div>`,
+          '<div class="card-footer">',
+          `<div class="card-meta">${metaPills.join("")}</div>`,
+          `<div class="card-badges">${badges.join("")}</div>`,
+          "</div>",
+          "</div>"
+        ].join("");
+
+        const tooltipParts = [
+          person.name,
+          `Generation ${ROMAN[person.gen] || person.gen + 1}`,
+          person.gender === "F" ? "Female" : "Male"
+        ];
+        if (person.status === "deceased") tooltipParts.push("Deceased");
+        if (person.marriedOut) tooltipParts.push("Married out");
+        if (person.issueless) tooltipParts.push("No issue");
+        card.title = tooltipParts.join(" | ");
+
+        return card;
+      },
+      renderCards() {
+        PERSONS.forEach((person) => {
+          const card = this.createCard(person);
+          if (!card) return;
+          Elements.wrap.appendChild(card);
+          this.cardById.set(person.id, card);
+        });
+      },
+      clearHighlight() {
+        Elements.wrap.classList.remove("tree-has-highlight");
+        this.cardById.forEach((card) => card.classList.remove("is-highlighted-card"));
+        this.lineByChildId.forEach((line) => line.classList.remove("is-highlighted-line"));
+      },
+      highlightTrail(personIds, edgeChildIds) {
+        this.clearHighlight();
+        if (!personIds.length && !edgeChildIds.length) return;
+        Elements.wrap.classList.add("tree-has-highlight");
+        personIds.forEach((id) => {
+          const card = this.cardById.get(id);
+          if (card) card.classList.add("is-highlighted-card");
+        });
+        edgeChildIds.forEach((id) => {
+          const line = this.lineByChildId.get(id);
+          if (line) line.classList.add("is-highlighted-line");
+        });
+      },
+      renderAll() {
+        this.renderGenerationGuides();
+        this.renderConnections();
+        this.renderCards();
+      }
+    };
+
+    const Viewport = {
+      scale: 1,
+      x: 0,
+      y: 0,
+      drag: false,
+      lastX: 0,
+      lastY: 0,
+      vx: 0,
+      vy: 0,
+      rafId: null,
+      touches: {},
+      pinchDist: null,
+      pinchMid: null,
+      applyTransform() {
+        Elements.wrap.style.transform = `translate(${this.x}px, ${this.y}px) scale(${this.scale})`;
+        Elements.zoomReadout.textContent = `${Math.round(this.scale * 100)}%`;
+        if (Elements.mobileZoomReadout) {
+          Elements.mobileZoomReadout.textContent = `${Math.round(this.scale * 100)}%`;
+        }
+      },
+      zoomAt(factor, originX, originY) {
+        const rect = Elements.cont.getBoundingClientRect();
+        const x = originX === undefined ? rect.width / 2 : originX;
+        const y = originY === undefined ? rect.height / 2 : originY;
+        const nextScale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, this.scale * factor));
+        const appliedFactor = nextScale / this.scale;
+        this.x = x - (x - this.x) * appliedFactor;
+        this.y = y - (y - this.y) * appliedFactor;
+        this.scale = nextScale;
+        this.applyTransform();
+      },
+      fitView() {
+        const width = Elements.cont.clientWidth;
+        const height = Elements.cont.clientHeight;
+        const isCompact = width < 860;
+        const isPhone = width < 560;
+        const paddingX = isCompact ? (isPhone ? 12 : 18) : 110;
+        const paddingY = isCompact ? (isPhone ? 16 : 42) : 64;
+        const scaleX = (width - paddingX * 2) / LayoutMetrics.totalWidth;
+        const scaleY = (height - paddingY * 2) / LayoutMetrics.totalHeight;
+        this.scale = Math.min(isCompact ? (isPhone ? 0.94 : 0.82) : 0.72, scaleX, scaleY);
+        this.scale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, this.scale));
+        this.x = (width - LayoutMetrics.totalWidth * this.scale) / 2;
+        this.y = isCompact ? (isPhone ? 14 : 18) : (height - LayoutMetrics.totalHeight * this.scale) / 2 + 10;
+        this.vx = 0;
+        this.vy = 0;
+        this.applyTransform();
+      },
+      centerRoot() {
+        const width = Elements.cont.clientWidth;
+        const rootPos = pos[root.id];
+        const rootCenterX = rootPos.x + LayoutMetrics.offsetX + LayoutMetrics.cardWidth / 2;
+        const compact = width < 860;
+        const phone = width < 560;
+        this.scale = compact ? (phone ? 0.96 : 0.78) : 0.56;
+        this.x = width / 2 - rootCenterX * this.scale;
+        this.y = compact ? (phone ? 12 : 36) : 34;
+        this.vx = 0;
+        this.vy = 0;
+        this.applyTransform();
+      },
+      initialView() {
+        this.centerRoot();
+      },
+      initialViewWhenReady(attempt) {
+        const nextAttempt = attempt || 0;
+        const width = Elements.cont.clientWidth;
+        const height = Elements.cont.clientHeight;
+        if ((width < 40 || height < 40) && nextAttempt < 12) {
+          setTimeout(() => this.initialViewWhenReady(nextAttempt + 1), 90);
+          return;
+        }
+        this.initialView();
+      },
+      momentum() {
+        if (Math.abs(this.vx) < 0.35 && Math.abs(this.vy) < 0.35) return;
+        this.x += this.vx;
+        this.y += this.vy;
+        this.vx *= 0.92;
+        this.vy *= 0.92;
+        this.applyTransform();
+        this.rafId = requestAnimationFrame(() => this.momentum());
+      },
+      bindPointerEvents() {
+        Elements.cont.addEventListener("mousedown", (event) => {
+          this.drag = true;
+          this.lastX = event.clientX;
+          this.lastY = event.clientY;
+          this.vx = 0;
+          this.vy = 0;
+          if (this.rafId) cancelAnimationFrame(this.rafId);
+          Elements.cont.classList.add("dragging");
+        });
+
+        window.addEventListener("mouseup", () => {
+          if (!this.drag) return;
+          this.drag = false;
+          Elements.cont.classList.remove("dragging");
+          this.rafId = requestAnimationFrame(() => this.momentum());
+        });
+
+        window.addEventListener("mousemove", (event) => {
+          if (!this.drag) return;
+          const dx = event.clientX - this.lastX;
+          const dy = event.clientY - this.lastY;
+          this.x += dx;
+          this.y += dy;
+          this.vx = dx;
+          this.vy = dy;
+          this.lastX = event.clientX;
+          this.lastY = event.clientY;
+          this.applyTransform();
+        });
+
+        Elements.cont.addEventListener("wheel", (event) => {
+          event.preventDefault();
+          const rect = Elements.cont.getBoundingClientRect();
+          const originX = event.clientX - rect.left;
+          const originY = event.clientY - rect.top;
+          this.zoomAt(event.deltaY < 0 ? 1.12 : 0.89, originX, originY);
+        }, { passive: false });
+
+        Elements.cont.addEventListener("touchstart", (event) => {
+          event.preventDefault();
+          if (this.rafId) cancelAnimationFrame(this.rafId);
+          this.vx = 0;
+          this.vy = 0;
+          Array.from(event.changedTouches).forEach((touch) => {
+            this.touches[touch.identifier] = { x: touch.clientX, y: touch.clientY };
+          });
+          const ids = Object.keys(this.touches);
+          if (ids.length === 2) {
+            const a = this.touches[ids[0]];
+            const b = this.touches[ids[1]];
+            this.pinchDist = Math.hypot(a.x - b.x, a.y - b.y);
+            this.pinchMid = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
+          }
+          // Anchor pan tracking to the first touch currently down,
+          // not to event.touches[0] which may be a stale reference.
+          const primary = this.touches[ids[0]];
+          this.lastX = primary.x;
+          this.lastY = primary.y;
+          this.drag = true;
+        }, { passive: false });
+
+        const endTouches = (event) => {
+          Array.from(event.changedTouches).forEach((touch) => delete this.touches[touch.identifier]);
+          const ids = Object.keys(this.touches);
+          if (ids.length < 2) {
+            this.pinchDist = null;
+            this.pinchMid = null;
+          }
+          if (!ids.length) {
+            this.drag = false;
+            this.rafId = requestAnimationFrame(() => this.momentum());
+          } else {
+            // Re-anchor to the still-down finger so the next touchmove
+            // doesn't compute a huge delta and fling the tree away.
+            this.lastX = this.touches[ids[0]].x;
+            this.lastY = this.touches[ids[0]].y;
+            this.vx = 0;
+            this.vy = 0;
+          }
+        };
+
+        Elements.cont.addEventListener("touchend", endTouches, { passive: true });
+        Elements.cont.addEventListener("touchcancel", endTouches, { passive: true });
+
+        Elements.cont.addEventListener("touchmove", (event) => {
+          event.preventDefault();
+          Array.from(event.changedTouches).forEach((touch) => {
+            this.touches[touch.identifier] = { x: touch.clientX, y: touch.clientY };
+          });
+          const ids = Object.keys(this.touches);
+
+          if (ids.length === 1) {
+            const touch = this.touches[ids[0]];
+            const dx = touch.x - this.lastX;
+            const dy = touch.y - this.lastY;
+            this.x += dx;
+            this.y += dy;
+            this.vx = dx;
+            this.vy = dy;
+            this.lastX = touch.x;
+            this.lastY = touch.y;
+            this.applyTransform();
+            return;
+          }
+
+          if (ids.length === 2) {
+            const a = this.touches[ids[0]];
+            const b = this.touches[ids[1]];
+            const distance = Math.hypot(a.x - b.x, a.y - b.y);
+            const mid = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
+            const rect = Elements.cont.getBoundingClientRect();
+            const originX = mid.x - rect.left;
+            const originY = mid.y - rect.top;
+
+            if (this.pinchDist) {
+              const factor = distance / this.pinchDist;
+              this.zoomAt(factor, originX, originY);
+            }
+
+            if (this.pinchMid) {
+              this.x += mid.x - this.pinchMid.x;
+              this.y += mid.y - this.pinchMid.y;
+            }
+
+            this.pinchDist = distance;
+            this.pinchMid = mid;
+            this.applyTransform();
+          }
+        }, { passive: false });
+      }
+    };
+
+    function zoomAt(factor, originX, originY) {
+      Viewport.zoomAt(factor, originX, originY);
+    }
+
+    function fitView() {
+      Viewport.fitView();
+    }
+
+    function centerRoot() {
+      Viewport.centerRoot();
+    }
+
+    const PanelManager = {
+      setState(panel, toggle, open) {
+        panel.classList.toggle("open", open);
+        toggle.setAttribute("aria-expanded", String(open));
+      },
+      toggleDesktop(which) {
+        const openOverview = Elements.overviewPanel.classList.contains("open");
+        const openLegend = Elements.legendPanel.classList.contains("open");
+        const openRelation = Elements.relationPanel.classList.contains("open");
+        if (which === "overview") {
+          this.setState(Elements.overviewPanel, Elements.desktopOverviewToggle, !openOverview);
+          this.setState(Elements.legendPanel, Elements.desktopLegendToggle, false);
+          this.setState(Elements.relationPanel, Elements.desktopRelationToggle, false);
+        } else if (which === "legend") {
+          this.setState(Elements.legendPanel, Elements.desktopLegendToggle, !openLegend);
+          this.setState(Elements.overviewPanel, Elements.desktopOverviewToggle, false);
+          this.setState(Elements.relationPanel, Elements.desktopRelationToggle, false);
+        } else {
+          this.setState(Elements.relationPanel, Elements.desktopRelationToggle, !openRelation);
+          this.setState(Elements.overviewPanel, Elements.desktopOverviewToggle, false);
+          this.setState(Elements.legendPanel, Elements.desktopLegendToggle, false);
+        }
+      },
+      toggleMobile() {
+        const isOpen = Elements.mobilePanel.classList.toggle("open");
+        Elements.mobileInfoToggle.setAttribute("aria-expanded", String(isOpen));
+        if (Elements.mobileDockInfo) {
+          Elements.mobileDockInfo.setAttribute("aria-expanded", String(isOpen));
+        }
+      },
+      bind() {
+        Elements.mobileInfoToggle.addEventListener("click", () => this.toggleMobile());
+        if (Elements.mobileDockInfo) {
+          Elements.mobileDockInfo.addEventListener("click", () => this.toggleMobile());
+        }
+        Elements.desktopOverviewToggle.addEventListener("click", () => this.toggleDesktop("overview"));
+        Elements.desktopLegendToggle.addEventListener("click", () => this.toggleDesktop("legend"));
+        Elements.desktopRelationToggle.addEventListener("click", () => this.toggleDesktop("relation"));
+      }
+    };
+
+    const App = {
+      resizeTimer: null,
+      showStartupError(error) {
+        if (!Elements.startupError) return;
+        Elements.startupError.classList.add("open");
+        if (error && error.message) {
+          const detail = Elements.startupError.querySelector("span");
+          if (detail) {
+            detail.textContent = `The browser failed while starting the interactive view: ${error.message}`;
+          }
+        }
+      },
+      bindRelationForms() {
+        RelationForms.forEach(({ formId, selfId, otherId, clearId, prefix }) => {
+          const form = document.getElementById(formId);
+          const selfInput = document.getElementById(selfId);
+          const otherInput = document.getElementById(otherId);
+          const clearButton = document.getElementById(clearId);
+          if (!form || !selfInput || !otherInput) return;
+          form.addEventListener("submit", (event) => {
+            event.preventDefault();
+            RelationUI.runLookup(selfInput.value, otherInput.value, prefix);
+          });
+          if (clearButton) {
+            clearButton.addEventListener("click", () => {
+              selfInput.value = "";
+              otherInput.value = "";
+              RelationUI.resetResult(prefix);
+            });
+          }
+        });
+      },
+      bindKeyboard() {
+        window.addEventListener("keydown", (event) => {
+          if (event.defaultPrevented || event.metaKey || event.ctrlKey || event.altKey) return;
+          const active = document.activeElement;
+          if (active && (active.tagName === "INPUT" || active.tagName === "TEXTAREA" || active.isContentEditable)) return;
+          if (event.key === "+" || event.key === "=") {
+            event.preventDefault();
+            Viewport.zoomAt(1.15);
+          } else if (event.key === "-" || event.key === "_") {
+            event.preventDefault();
+            Viewport.zoomAt(0.87);
+          } else if (event.key === "0" || event.key === "Home") {
+            event.preventDefault();
+            Viewport.fitView();
+          } else if (event.key === "ArrowLeft") {
+            event.preventDefault();
+            Viewport.x += 52;
+            Viewport.applyTransform();
+          } else if (event.key === "ArrowRight") {
+            event.preventDefault();
+            Viewport.x -= 52;
+            Viewport.applyTransform();
+          } else if (event.key === "ArrowUp") {
+            event.preventDefault();
+            Viewport.y += 52;
+            Viewport.applyTransform();
+          } else if (event.key === "ArrowDown") {
+            event.preventDefault();
+            Viewport.y -= 52;
+            Viewport.applyTransform();
+          }
+        });
+      },
+      bindResize() {
+        // Track width separately from height. On mobile, the address bar
+        // showing/hiding fires a resize event with only a height change,
+        // and we do NOT want that to reset the user's pan/zoom position.
+        this.lastWidth = window.innerWidth;
+        window.addEventListener("resize", () => {
+          const newWidth = window.innerWidth;
+          // Only re-center if width changed meaningfully (orientation change,
+          // window resize on desktop). Ignore height-only changes from the
+          // mobile browser chrome collapsing/expanding.
+          if (Math.abs(newWidth - this.lastWidth) < 2) return;
+          this.lastWidth = newWidth;
+          clearTimeout(this.resizeTimer);
+          this.resizeTimer = setTimeout(() => {
+            Viewport.initialViewWhenReady(0);
+          }, 180);
+        });
+        window.addEventListener("load", () => {
+          Viewport.initialViewWhenReady(0);
+        });
+        window.addEventListener("pageshow", () => {
+          Viewport.initialViewWhenReady(0);
+        });
+        window.addEventListener("orientationchange", () => {
+          clearTimeout(this.resizeTimer);
+          this.resizeTimer = setTimeout(() => {
+            Viewport.initialViewWhenReady(0);
+          }, 220);
+        });
+      },
+      init() {
+        TreeRenderer.renderAll();
+        this.bindRelationForms();
+        Viewport.bindPointerEvents();
+        PanelManager.bind();
+        this.bindKeyboard();
+        this.bindResize();
+        Viewport.initialViewWhenReady(0);
+      }
+    };
+
+    try {
+      App.init();
+    } catch (error) {
+      console.error(error);
+      App.showStartupError(error);
+    }
+  </script>
+</body>
+</html>
