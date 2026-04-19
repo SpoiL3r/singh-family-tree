@@ -44,7 +44,19 @@ Paternal links (`parentId`) build the visual tree. `motherId` is additive and on
 
 ## Relation finder
 
-Type two names in the hero form. The engine runs a BFS over `parentId`+`motherId`, finds the nearest common ancestor, and emits a Hindi term plus the connecting path. Maternal, paternal, and cross-gender terms are all supported (Chachera/Mamera/Phuphera/Mausera Bhai/Behen, Par Dada, 2× Par Dada, and so on).
+Type two names in the hero form. The engine finds the lowest common ancestor of the two people across *both* parental lines, then labels the connecting path with a Hindi term (and English gloss). Maternal, paternal, and cross-gender terms are all supported (Chachera/Mamera/Phuphera/Mausera Bhai/Behen, Par Dada, 2× Par Dada, and so on).
+
+### How the traversal works
+
+The family is a DAG, not a tree — each person has up to two parent edges (`parentId`, `motherId`). Relation resolution runs in three stages, all implemented in [assets/js/app.js](assets/js/app.js):
+
+1. **BFS ancestor map per person** — [`buildAncestorMap`](assets/js/app.js#L349) walks up from a starting person using a FIFO queue (`queue.shift()`), visiting both the father and the mother at each step. For every ancestor reached it stores the shortest path and its length. BFS (not DFS) is the right shape here because we want the *closest* link to each shared ancestor — DFS would happily take a long maternal detour when a shorter paternal one exists. A cycle guard (`path.indexOf`) prevents revisiting nodes along the current path.
+
+2. **Common-ancestor pick** — [`findCommonAncestorDetails`](assets/js/app.js#L367) intersects the two ancestor maps and picks the ancestor that minimizes `selfDistance + targetDistance`, tiebroken by the *max* of the two distances. That tiebreak prefers balanced relations (siblings share a parent at distance 1/1) over lopsided ones (great-grandparent at 3/0).
+
+3. **Trail assembly + per-edge labeling** — [`buildConnectionTrail`](assets/js/app.js#L391) stitches the self-side path and the reversed target-side path into a single ordered sequence, which is what the UI staggers during the draw-on animation. Each edge along the trail is then classified as a father-link or mother-link via [`stepKind`](assets/js/app.js#L416) — that's what lets the Hindi generator distinguish paternal (Dada / Chacha / Bhatija) from maternal (Nana / Mama / Bhanja) terms on the same structural relation.
+
+Complexity is O(V+E) per person for the BFS, and O(|ancestors(A)|) for the intersection — fast enough to rerun on every keystroke in the relation form.
 
 ## Animations
 
