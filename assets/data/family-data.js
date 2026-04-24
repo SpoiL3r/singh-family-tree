@@ -110,10 +110,10 @@ window.FAMILY_DATA = {
     { id: "P121", name: "Shaunak", gender: "M", gen: 6, branch: "B", parentId: "P236" }
   ],
   branchMeta: {
-    root: { label: "Root Line", founder: "Sheo Deen Line", color: "#876e5c", surface: "#f2eadf", stroke: "#d7c4b3", line: "#9d816c" },
-    A: { label: "Branch A", founder: "Mahavir Prasad", color: "#345f9c", surface: "#ecf3ff", stroke: "#bfd0eb", line: "#4f78b0" },
-    B: { label: "Branch B", founder: "Mewa Lal", color: "#2f7f5f", surface: "#edf8f1", stroke: "#bbdcc8", line: "#428a6b" },
-    C: { label: "Branch C", founder: "Ram Adneen", color: "#bf6b31", surface: "#fff2e8", stroke: "#ebccb4", line: "#d58349" },
-    D: { label: "Branch D", founder: "Brij Lal", color: "#6b529d", surface: "#f4efff", stroke: "#d7c8ef", line: "#8465bf" }
+    root: { label: "Root Line", founder: "Sheo Deen Line", color: "#876e5c", colorText: "#b9a088", surface: "#f2eadf", stroke: "#d7c4b3", line: "#9d816c" },
+    A: { label: "Branch A", founder: "Mahavir Prasad", color: "#345f9c", colorText: "#4f7fc6", surface: "#ecf3ff", stroke: "#bfd0eb", line: "#4f78b0" },
+    B: { label: "Branch B", founder: "Mewa Lal", color: "#2f7f5f", colorText: "#3fa479", surface: "#edf8f1", stroke: "#bbdcc8", line: "#428a6b" },
+    C: { label: "Branch C", founder: "Ram Adneen", color: "#bf6b31", colorText: "#d58a52", surface: "#fff2e8", stroke: "#ebccb4", line: "#d58349" },
+    D: { label: "Branch D", founder: "Brij Lal", color: "#6b529d", colorText: "#9780c7", surface: "#f4efff", stroke: "#d7c8ef", line: "#8465bf" }
   }
 };
