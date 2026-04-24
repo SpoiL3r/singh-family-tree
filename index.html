@@ -4,6 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Sheo Deen Vansh — Family Archive</title>
+  <meta name="description" content="Interactive family tree archive — seven generations, four branches, Hindi and English kinship terms.">
+  <meta name="theme-color" content="#11161d">
+  <meta name="color-scheme" content="dark">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23d9873d'/%3E%3Ctext x='50%25' y='70%25' text-anchor='middle' font-family='Fraunces, Georgia, serif' font-size='36' font-weight='600' fill='%23fff8eb'%3E%E0%A4%B5%E0%A4%82%3C/text%3E%3C/svg%3E">
+  <meta property="og:title" content="Sheo Deen Vansh — Family Archive">
+  <meta property="og:description" content="Seven generations of the Singh lineage of Babuganj, Lucknow.">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap">
@@ -96,7 +104,7 @@
         </button>
       </div>
 
-      <div class="relation-result" id="relation-result" role="status" aria-live="polite">
+      <div class="relation-result" id="relation-result" role="status" aria-live="polite" aria-atomic="true" data-relation-state="empty">
         <div class="result-meta">
           <div class="result-kicker" id="relation-kicker">Awaiting two names</div>
           <button class="result-close" type="button" id="relation-result-close" aria-label="Dismiss result">×</button>
@@ -141,7 +149,7 @@
 
     <button class="btn fab fab-info" id="mobile-info-toggle" type="button" aria-expanded="false" aria-controls="mobile-panel" aria-label="Open branch archive">☰</button>
 
-    <div class="mobile-toast" id="mobile-result-toast" role="status" aria-live="polite">
+    <div class="mobile-toast" id="mobile-result-toast" role="status" aria-live="polite" aria-atomic="true">
       <div class="toast-meta">
         <span class="toast-kicker" id="mobile-toast-kicker">Relation</span>
         <button class="toast-close" type="button" id="mobile-toast-close" aria-label="Dismiss result">×</button>
@@ -197,7 +205,7 @@
               <button class="btn ghost" type="button" id="mobile-relation-clear-button">Clear</button>
             </div>
           </form>
-          <div class="relation-result mobile-result" id="mobile-relation-result" role="status" aria-live="polite">
+          <div class="relation-result mobile-result" id="mobile-relation-result" role="status" aria-live="polite" aria-atomic="true" data-relation-state="empty">
             <div class="result-meta">
               <div class="result-kicker" id="mobile-relation-kicker">Awaiting two names</div>
             </div>

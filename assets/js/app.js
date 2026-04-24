@@ -250,14 +250,16 @@
   }
 
   function initialsForName(name) {
-    return String(name || "")
-      .replace(/^Smt\s+/i, "")
-      .split(/\s+/)
-      .filter(Boolean)
-      .slice(0, 2)
-      .map((part) => part.charAt(0))
-      .join("")
-      .toUpperCase() || "?";
+    const cleaned = String(name || "")
+      .replace(/\([^)]*\)/g, " ")
+      .replace(/\b(?:Smt|Shri|Sri|Dr|Late)\.?\s+/gi, "")
+      .replace(/^Unknown\s+Daughter.*$/i, "")
+      .trim();
+    if (!cleaned) return "?";
+    const parts = cleaned.split(/\s+/).filter(Boolean);
+    if (parts.length === 0) return "?";
+    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+    return parts.slice(0, 2).map((part) => part.charAt(0)).join("").toUpperCase();
   }
 
   function personLookupLabel(person) {
@@ -330,7 +332,7 @@
       const founderId = State.founderIdByBranch[branch];
       const monogram = meta.founder ? meta.founder.charAt(0).toUpperCase() : branch;
       return [
-        `<button class="branch-card" type="button" data-focus-person="${founderId}" style="--branch-color:${meta.color}">`,
+        `<button class="branch-card" type="button" data-focus-person="${founderId}" style="--branch-color:${meta.color};--branch-color-text:${meta.colorText || meta.color};--branch-line:${meta.line || meta.color}">`,
           `<span class="branch-card-monogram">${escapeHtml(monogram)}</span>`,
           '<span class="branch-card-body">',
             `<span class="branch-card-label">${escapeHtml(meta.label)}</span>`,
@@ -708,15 +710,20 @@
     setText(`${prefix}relation-explain`, result.explain || "");
     setText(`${prefix}relation-examples`, result.examples || "");
 
-    // toggle active state
     const resultEl = document.getElementById(`${prefix}relation-result`);
-    if (resultEl) resultEl.classList.add("is-active");
+    if (resultEl) {
+      resultEl.classList.add("is-active");
+      resultEl.dataset.relationState = result.state || "found";
+    }
   }
 
   function resetRelationResult(prefix) {
     TreeRenderer.clearHighlight();
     const resultEl = document.getElementById(`${prefix}relation-result`);
-    if (resultEl) resultEl.classList.remove("is-active");
+    if (resultEl) {
+      resultEl.classList.remove("is-active");
+      resultEl.dataset.relationState = "empty";
+    }
     setText(`${prefix}relation-kicker`, "Awaiting two names");
     setText(`${prefix}relation-term`, "Choose two names to begin");
     setText(`${prefix}relation-explain`, "The kinship term and connecting path will appear here once both names resolve.");
@@ -728,39 +735,40 @@
     const selfMatch = NameLookup.resolveInput(selfValue);
     if (selfMatch.state === "empty") {
       TreeRenderer.clearHighlight();
-      writeRelationResult(prefix, { kicker: "Need a starting point", term: "Enter your name", explain: "Start by entering your own name from the chart." });
+      writeRelationResult(prefix, { state: "incomplete", kicker: "Need a starting point", term: "Enter your name", explain: "Start by entering your own name from the chart." });
       return;
     }
     if (selfMatch.state === "missing") {
       TreeRenderer.clearHighlight();
-      writeRelationResult(prefix, { kicker: "No match", term: "Name not found", explain: `No chart entry matched "${selfValue}".`, examples: "Try the exact chart name or pick a suggestion from the list." });
+      writeRelationResult(prefix, { state: "missing", kicker: "No match", term: "Name not found", explain: `No chart entry matched "${selfValue}".`, examples: "Try the exact chart name or pick a suggestion from the list." });
       return;
     }
     if (selfMatch.state === "ambiguous") {
       TreeRenderer.clearHighlight();
-      writeRelationResult(prefix, { kicker: "Multiple matches", term: `"${selfValue}" appears more than once`, explain: "Pick the suggestion that includes the parent name to disambiguate.", examples: selfMatch.labels.join("  ·  ") });
+      writeRelationResult(prefix, { state: "ambiguous", kicker: "Multiple matches", term: `"${selfValue}" appears more than once`, explain: "Pick the suggestion that includes the parent name to disambiguate.", examples: selfMatch.labels.join("  ·  ") });
       return;
     }
 
     const otherMatch = NameLookup.resolveInput(otherValue);
     if (otherMatch.state === "empty") {
       TreeRenderer.clearHighlight();
-      writeRelationResult(prefix, { kicker: "One more name", term: "Enter the second name", explain: "Add the other family member to compare the relation." });
+      writeRelationResult(prefix, { state: "incomplete", kicker: "One more name", term: "Enter the second name", explain: "Add the other family member to compare the relation." });
       return;
     }
     if (otherMatch.state === "missing") {
       TreeRenderer.clearHighlight();
-      writeRelationResult(prefix, { kicker: "No match", term: "Name not found", explain: `No chart entry matched "${otherValue}".`, examples: "Try the exact chart name or pick a suggestion from the list." });
+      writeRelationResult(prefix, { state: "missing", kicker: "No match", term: "Name not found", explain: `No chart entry matched "${otherValue}".`, examples: "Try the exact chart name or pick a suggestion from the list." });
       return;
     }
     if (otherMatch.state === "ambiguous") {
       TreeRenderer.clearHighlight();
-      writeRelationResult(prefix, { kicker: "Multiple matches", term: `"${otherValue}" appears more than once`, explain: "Pick the suggestion that includes the parent name to disambiguate.", examples: otherMatch.labels.join("  ·  ") });
+      writeRelationResult(prefix, { state: "ambiguous", kicker: "Multiple matches", term: `"${otherValue}" appears more than once`, explain: "Pick the suggestion that includes the parent name to disambiguate.", examples: otherMatch.labels.join("  ·  ") });
       return;
     }
 
     const relation = RelationEngine.compute(selfMatch.person, otherMatch.person);
     const trail = buildConnectionTrail(selfMatch.person.id, otherMatch.person.id);
+    relation.state = selfMatch.person.id === otherMatch.person.id ? "same" : "found";
     relation.kicker = `${otherMatch.person.name} is ${selfMatch.person.name}'s relation`;
     relation.examples = relation.examples
       ? `${relation.examples} The connecting path is highlighted on the tree.`
@@ -805,6 +813,35 @@
   const TreeRenderer = {
     cardById: new Map(),
     lineByChildId: new Map(),
+    renderLineDefs() {
+      const existing = Elements.svg.querySelector("defs.line-gradients");
+      if (existing) existing.remove();
+      const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+      defs.setAttribute("class", "line-gradients");
+      const keys = ["root", "A", "B", "C", "D"];
+      keys.forEach((key) => {
+        const meta = BRANCH_META[key];
+        if (!meta) return;
+        const grad = document.createElementNS("http://www.w3.org/2000/svg", "linearGradient");
+        grad.setAttribute("id", `line-grad-${key}`);
+        grad.setAttribute("x1", "0");
+        grad.setAttribute("y1", "0");
+        grad.setAttribute("x2", "0");
+        grad.setAttribute("y2", "1");
+        const stopTop = document.createElementNS("http://www.w3.org/2000/svg", "stop");
+        stopTop.setAttribute("offset", "0%");
+        stopTop.setAttribute("stop-color", meta.line);
+        stopTop.setAttribute("stop-opacity", "0.55");
+        const stopBottom = document.createElementNS("http://www.w3.org/2000/svg", "stop");
+        stopBottom.setAttribute("offset", "100%");
+        stopBottom.setAttribute("stop-color", meta.line);
+        stopBottom.setAttribute("stop-opacity", "1");
+        grad.appendChild(stopTop);
+        grad.appendChild(stopBottom);
+        defs.appendChild(grad);
+      });
+      Elements.svg.insertBefore(defs, Elements.svg.firstChild);
+    },
     renderGenerationGuides() {
       const generationY = {};
       PERSONS.forEach((person) => {
@@ -852,8 +889,8 @@
         const meta = BRANCH_META[person.branch] || BRANCH_META.root;
 
         // Orthogonal lines with rounded corners — feels more architectural
-        const midY = py + (cy - py) * 0.55;
-        const r = 10;
+        const midY = py + (cy - py) * 0.50;
+        const r = 14;
         let d;
         if (Math.abs(cx - px) < 1) {
           d = `M${px},${py} L${cx},${cy}`;
@@ -874,15 +911,16 @@
           ].join(" ");
         }
 
+        const gradKey = BRANCH_META[person.branch] ? person.branch : "root";
         const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
         path.setAttribute("class", "tree-line");
         path.setAttribute("d", d);
-        path.setAttribute("stroke", meta.line);
-        path.setAttribute("stroke-width", person.marriedOut ? "1.4" : (parentPerson.gen <= 1 ? "2.4" : "1.8"));
+        path.setAttribute("stroke", `url(#line-grad-${gradKey})`);
+        path.setAttribute("stroke-width", person.marriedOut ? "1.1" : (parentPerson.gen <= 1 ? "2.0" : "1.4"));
         path.setAttribute("stroke-linecap", "round");
         path.setAttribute("stroke-linejoin", "round");
         path.setAttribute("fill", "none");
-        path.setAttribute("opacity", person.marriedOut ? "0.5" : "0.78");
+        path.setAttribute("opacity", person.marriedOut ? "0.5" : "0.82");
         if (person.marriedOut) path.setAttribute("stroke-dasharray", "4 5");
         Elements.svg.appendChild(path);
         this.lineByChildId.set(person.id, path);
@@ -907,8 +945,10 @@
       card.className = [
         "card",
         person.gen <= 1 ? "card-root" : "",
+        person.gen === 0 ? "card-patriarch" : "",
         isUnknownName ? "card-unknown" : "",
         person.marriedOut ? "married-out" : "",
+        person.issueless ? "issueless" : "",
         person.status === "deceased" ? "deceased" : ""
       ].filter(Boolean).join(" ");
       card.dataset.personId = person.id;
@@ -916,6 +956,9 @@
       card.style.left = `${coords.x + State.layoutMetrics.offsetX}px`;
       card.style.top = `${coords.y + State.layoutMetrics.offsetY}px`;
       card.style.setProperty("--accent", meta.color);
+      card.style.setProperty("--branch-color", meta.color);
+      card.style.setProperty("--branch-color-text", meta.colorText || meta.color);
+      card.style.setProperty("--branch-line", meta.line || meta.color);
       card.style.setProperty("--surface", meta.surface);
       card.style.setProperty("--stroke", meta.stroke);
 
@@ -969,15 +1012,43 @@
         Viewport.focusPerson(person.id);
       });
 
+      card.addEventListener("focus", () => {
+        if (document.body.classList.contains("using-mouse")) return;
+        Viewport.focusPerson(person.id);
+      });
+
       return card;
     },
     renderCards() {
+      const freshCards = [];
       PERSONS.forEach((person) => {
         const card = this.createCard(person);
         if (!card) return;
+        if (Motion.enabled && !State.didReveal) {
+          card.style.opacity = "0";
+          card.style.transform = "translateY(6px)";
+        }
         Elements.wrap.appendChild(card);
         this.cardById.set(person.id, card);
+        freshCards.push(card);
       });
+      if (Motion.enabled && !State.didReveal && freshCards.length) {
+        State.didReveal = true;
+        window.anime({
+          targets: freshCards,
+          opacity: [0, 1],
+          translateY: [6, 0],
+          duration: 520,
+          delay: window.anime.stagger(14),
+          easing: "cubicBezier(0.2, 0.8, 0.2, 1)",
+          complete: () => {
+            freshCards.forEach((card) => {
+              card.style.opacity = "";
+              card.style.transform = "";
+            });
+          }
+        });
+      }
     },
     pendingCardTimers: [],
     clearHighlight() {
@@ -1024,7 +1095,7 @@
           strokeDashoffset: [length, 0],
           duration: drawDuration,
           delay: index * stagger,
-          easing: "easeInOutQuart",
+          easing: "cubicBezier(0.2, 0.8, 0.2, 1)",
           complete: () => {
             line.style.strokeDasharray = "";
             line.style.strokeDashoffset = "";
@@ -1041,6 +1112,7 @@
       });
     },
     renderAll() {
+      this.renderLineDefs();
       this.renderGenerationGuides();
       this.renderConnections();
       this.renderCards();
@@ -1089,7 +1161,7 @@
         targets: progress,
         t: 1,
         duration,
-        easing: opts.easing || "easeInOutQuart",
+        easing: opts.easing || "cubicBezier(0.32, 0.72, 0, 1)",
         update() {
           self.scale = from.scale + (target.scale - from.scale) * progress.t;
           self.x = from.x + (target.x - from.x) * progress.t;
@@ -1286,6 +1358,11 @@
     },
 
     bindPointerEvents() {
+      window.addEventListener("mousedown", () => document.body.classList.add("using-mouse"), true);
+      window.addEventListener("keydown", (event) => {
+        if (event.key === "Tab") document.body.classList.remove("using-mouse");
+      }, true);
+
       Elements.cont.addEventListener("mousedown", (event) => {
         this.cancelTween();
         this.drag = true;
@@ -1420,7 +1497,10 @@
       if (Elements.mobileInfoToggle) Elements.mobileInfoToggle.addEventListener("click", () => this.toggleMobile());
       if (Elements.mobileDockInfo) Elements.mobileDockInfo.addEventListener("click", () => this.toggleMobile());
       if (Elements.mobilePanelClose) Elements.mobilePanelClose.addEventListener("click", () => this.setMobileOpen(false));
-      if (Elements.desktopPanelToggle) Elements.desktopPanelToggle.addEventListener("click", () => this.toggleDesktop());
+      if (Elements.desktopPanelToggle) Elements.desktopPanelToggle.addEventListener("click", () => {
+        if (window.innerWidth < 980) this.toggleMobile();
+        else this.toggleDesktop();
+      });
       if (Elements.desktopPanelClose) Elements.desktopPanelClose.addEventListener("click", () => this.setDesktopOpen(false));
     }
   };
@@ -1450,7 +1530,8 @@
       bind(Elements.mobileZoomOutButton, () => Viewport.zoomAt(0.85));
 
       // Topbar stat clicks open branches panel
-      document.querySelectorAll("[data-jump-target]").forEach((node) => {
+      const statButtons = document.querySelectorAll("[data-jump-target]");
+      statButtons.forEach((node) => {
         node.addEventListener("click", () => {
           const target = node.getAttribute("data-jump-target");
           if (target === "branches" || target === "root") {
@@ -1458,8 +1539,14 @@
             else PanelManager.setDesktopOpen(true);
           }
           if (target === "root") Viewport.centerRoot();
+          statButtons.forEach((other) => other.classList.toggle("is-active", other === node));
         });
       });
+      if (Elements.cont) {
+        Elements.cont.addEventListener("mousedown", () => {
+          statButtons.forEach((node) => node.classList.remove("is-active"));
+        });
+      }
 
       if (Elements.relationHeroCollapse) {
         Elements.relationHeroCollapse.addEventListener("click", () => {
@@ -1519,12 +1606,21 @@
         });
     },
     bindRelationForms() {
+      const toggleHasValue = (input) => {
+        const wrap = input.closest(".hero-input-wrap");
+        if (wrap) wrap.classList.toggle("has-value", Boolean(input.value.trim()));
+      };
       RelationForms.forEach(({ formId, selfId, otherId, clearId, prefix }) => {
         const form = document.getElementById(formId);
         const selfInput = document.getElementById(selfId);
         const otherInput = document.getElementById(otherId);
         const clearButton = document.getElementById(clearId);
         if (!form || !selfInput || !otherInput) return;
+
+        [selfInput, otherInput].forEach((input) => {
+          input.addEventListener("input", () => toggleHasValue(input));
+          input.addEventListener("change", () => toggleHasValue(input));
+        });
 
         form.addEventListener("submit", (event) => {
           event.preventDefault();
@@ -1535,6 +1631,8 @@
           clearButton.addEventListener("click", () => {
             selfInput.value = "";
             otherInput.value = "";
+            toggleHasValue(selfInput);
+            toggleHasValue(otherInput);
             resetRelationResult(prefix);
             Viewport.centerRoot();
           });
