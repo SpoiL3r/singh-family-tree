@@ -4,12 +4,12 @@
   const BRANCH_META = FAMILY_DATA.branchMeta || {};
 
   const ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII"];
-  const CARD_WIDTH = 200;
-  const CARD_HEIGHT = 116;
-  const CARD_HEIGHT_ROOT = 132;
-  const CARD_WIDTH_ROOT = 220;
-  const H_GAP = 28;
-  const V_GAP = 110;
+  const CARD_WIDTH = 224;
+  const CARD_HEIGHT = 132;
+  const CARD_HEIGHT_ROOT = 152;
+  const CARD_WIDTH_ROOT = 248;
+  const H_GAP = 34;
+  const V_GAP = 122;
   const PAD = 180;
   const MIN_SCALE = 0.1;
   const MAX_SCALE = 3.2;
@@ -247,6 +247,17 @@
 
   function generationLabel(gen) {
     return `Gen ${ROMAN[gen] || String(gen + 1)}`;
+  }
+
+  function initialsForName(name) {
+    return String(name || "")
+      .replace(/^Smt\s+/i, "")
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((part) => part.charAt(0))
+      .join("")
+      .toUpperCase() || "?";
   }
 
   function personLookupLabel(person) {
@@ -917,18 +928,25 @@
       const genderClass = person.gender === "F" ? "card-gender female" : "card-gender";
       const genderGlyph = person.gender === "F" ? "F" : "M";
       const branchLabel = meta.label || "";
+      const generation = ROMAN[person.gen] || person.gen + 1;
+      const initials = initialsForName(person.name);
 
       card.innerHTML = [
         '<div class="card-inner">',
           '<div class="card-topline">',
             `<span class="card-branch-label">${escapeHtml(branchLabel)}</span>`,
-            `<span class="card-generation">${ROMAN[person.gen] || person.gen + 1}</span>`,
+            '<span class="card-topline-actions">',
+              `<span class="card-generation">Gen ${generation}</span>`,
+              `<span class="${genderClass}" aria-hidden="true">${genderGlyph}</span>`,
+            "</span>",
           "</div>",
           '<div class="card-name-row">',
-            `<div class="card-name">${escapeHtml(person.name)}</div>`,
-            `<span class="${genderClass}" aria-hidden="true">${genderGlyph}</span>`,
+            `<span class="card-avatar" aria-hidden="true">${escapeHtml(initials)}</span>`,
+            '<div class="card-name-stack">',
+              `<div class="card-name">${escapeHtml(person.name)}</div>`,
+              `<div class="card-sub">${escapeHtml(this.describeCardContext(person))}</div>`,
+            "</div>",
           "</div>",
-          `<div class="card-sub">${escapeHtml(this.describeCardContext(person))}</div>`,
           '<div class="card-footer">',
             `<div class="card-badges">${badges.join("")}</div>`,
           "</div>",
@@ -1173,7 +1191,8 @@
       this.tweenTo({ scale, x, y }, options);
     },
 
-    showUpperGenerations(maxGeneration) {
+    showUpperGenerations(maxGeneration, options) {
+      const opts = options || {};
       const width = Elements.cont.clientWidth;
       const isPhone = width < 560;
       const isCompact = width < 980;
@@ -1184,7 +1203,9 @@
         minScale: isCompact ? (isPhone ? 0.44 : 0.32) : 0.22,
         maxScale: isCompact ? (isPhone ? 1.02 : 0.6) : 0.45,
         alignX: 0.5,
-        alignY: 0.05
+        alignY: 0.05,
+        duration: opts.duration,
+        easing: opts.easing
       });
     },
 
@@ -1194,11 +1215,12 @@
       const rootPos = State.pos[State.root.id];
       const rootWidth = cardWidthForPerson(State.root);
       const rootCenterX = rootPos.x + State.layoutMetrics.offsetX + rootWidth / 2;
+      const rootTopY = rootPos.y + State.layoutMetrics.offsetY;
       const compact = box.width < 980;
       const phone = box.width < 560;
-      const scale = compact ? (phone ? 0.95 : 0.7) : 0.55;
+      const scale = compact ? (phone ? 0.95 : 0.7) : 0.72;
       const x = box.insets.left + box.innerWidth / 2 - rootCenterX * scale;
-      const y = box.insets.top + 20;
+      const y = box.insets.top + (compact ? 24 : 28) - rootTopY * scale;
       this.tweenTo({ scale, x, y }, options);
     },
 
@@ -1237,6 +1259,10 @@
     },
 
     initialView() {
+      if (Elements.cont.clientWidth < 980) {
+        this.showUpperGenerations(1, { duration: 0 });
+        return;
+      }
       this.centerRoot({ duration: 0 });
     },
 
